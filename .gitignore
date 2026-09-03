@@ -52,7 +52,6 @@ next-env.d.ts
 # None of it is needed to build or run the site.
 /_migration/
 
-# migrated WordPress media (583 MB, 2008 files) — see _migration/IMAGE-AUDIT.md
-# ⚠️ Ignored means NOT deployed: Vercel builds from git, so these will 404 in
-# production until they are served from object storage or restored at build time.
-/public/wp-content/uploads/
+# NOTE: public/wp-content/uploads/ IS committed (2,008 files, ~250 MB after in-place
+# recompression). It was previously ignored in favour of R2; that is now opt-in only —
+# the rewrite in next.config.ts stays inert while R2_PUBLIC_BASE is unset.
