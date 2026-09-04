@@ -8,6 +8,7 @@ import { CtaBand } from "@/components/ui/cta-band";
 import Image from "next/image";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { VideoEmbed } from "@/components/ui/video-embed";
+import { AwardsGallery } from "@/components/awards-gallery";
 import { awards, doctor, pressCoverage, newsItems, videos } from "@/lib/data";
 
 const doc = getDocByFileSlug("news-awards")!;
@@ -105,6 +106,12 @@ export default function AwardsPage() {
         </Container>
       </section>
 
+
+      {/* Award photographs — the Elementor image carousel that used to sit on the
+          homepage (live WordPress section 5). Relocated here on 2026-09-04: it was
+          the third awards touchpoint on `/`, and this is the awards page. Same
+          images, unchanged. See _migration/PAGE-REBUILD.md §6. */}
+      <AwardsGallery />
 
       {/* ── News ──────────────────────────────────────────────────────────────
           Migrated from the live /news-awards/ page. The template had no press

@@ -49,10 +49,13 @@ export function PostsExplorer({
   posts: allPosts,
   limit,
   showFeatured = true,
+  showControls = true,
 }: {
   posts: PostSummary[];
   limit?: number;
   showFeatured?: boolean;
+  /** The homepage teaser renders a fixed 3 posts, so the filter + search row is dead weight there. */
+  showControls?: boolean;
 }) {
   // Derived from the posts themselves — migrated WordPress content carries no real
   // categories (everything was "uncategorized"), so only "All" renders for now.
@@ -111,7 +114,7 @@ export function PostsExplorer({
       )}
 
       {/* controls — minimal text toggles */}
-      <div className="mb-2 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className={cn("mb-2 flex-col gap-5 sm:flex-row sm:items-center sm:justify-between", showControls ? "flex" : "hidden")}>
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
           {categories.map((c) => (
             <button
@@ -143,7 +146,7 @@ export function PostsExplorer({
       {filtered.length === 0 ? (
         <p className="border-t border-border py-20 text-center text-muted">No articles match your search.</p>
       ) : (
-        <div className="mt-8 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+        <div className={cn("grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3", showControls ? "mt-8" : "mt-0")}>
           {filtered.map((p, i) => (
             <motion.div
               key={p.slug}

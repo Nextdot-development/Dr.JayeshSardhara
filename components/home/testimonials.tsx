@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { ArrowRight, Star } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { googleReviews, doctor } from "@/lib/data";
@@ -16,65 +15,51 @@ function GoogleG({ className }: { className?: string }) {
   );
 }
 
+/**
+ * Patient stories.
+ *
+ * Density pass 2026-09-04: was a full-bleed featured quote stacked above a 3-card row
+ * (1,240px) showing 4 of the 9 reviews. Now a single scroll-snap row carrying ALL NINE —
+ * more content in the markup, in roughly a third of the height. Reviews are real Google
+ * reviews traced to the practice's live widget; see lib/data.ts.
+ */
 export function Testimonials() {
-  const [featured, ...rest] = googleReviews;
-  const cards = rest.slice(0, 3);
-
   return (
-    <section className="bg-navy-950 py-24 text-white lg:py-32" id="stories">
+    <section className="bg-navy-950 py-16 text-white lg:py-20" id="stories">
       <Container>
-        <div className="flex flex-col gap-6 border-b border-white/15 pb-10 md:flex-row md:items-end md:justify-between">
+        <div className="flex flex-col gap-5 border-b border-white/15 pb-7 md:flex-row md:items-end md:justify-between">
           <div>
             <span className="flex items-center gap-3 text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-teal-300">
               <span className="font-display normal-case tracking-normal text-white/40">05</span>
               <span className="h-px w-8 bg-teal-400/50" /> Patient Stories
             </span>
-            <h2 className="mt-5 max-w-2xl font-display text-[2.1rem] font-medium leading-[1.1] sm:text-5xl">
+            <h2 className="mt-4 max-w-2xl font-display text-[1.9rem] font-medium leading-[1.12] sm:text-[2.4rem]">
               Real journeys. Real recoveries.
             </h2>
           </div>
-          <a href="/testimonials/" className="group inline-flex items-center gap-2 text-sm font-medium text-white/80 hover:text-white">
+          <a
+            href="/testimonials/"
+            className="group inline-flex shrink-0 items-center gap-2 text-sm font-medium text-white/80 hover:text-white"
+          >
             All Google reviews
             <ArrowRight className="h-4 w-4 text-teal-300 transition-transform group-hover:translate-x-1" />
           </a>
         </div>
+      </Container>
 
-        {/* featured review */}
-        <motion.figure
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.6 }}
-          className="border-b border-white/15 py-14"
+      {/* Horizontal rail. Aligned by living inside the Container and cancelling only its
+          right padding with a negative margin — NOT with a 100vw calc, which counts the
+          scrollbar the centred container does not and left the cards 5px out at >=1440px. */}
+      <Container className="mt-8">
+        <div
+          className="-mr-5 flex snap-x snap-mandatory gap-5 overflow-x-auto pb-4 pr-5 sm:-mr-8 sm:pr-8 lg:-mr-10 lg:pr-10 [scrollbar-width:thin]"
+          role="region"
+          aria-label="Patient reviews from Google"
         >
-          <div className="flex items-center justify-between">
-            <div className="flex gap-1 text-gold-400">
-              {Array.from({ length: featured.rating }).map((_, i) => (
-                <Star key={i} className="h-4 w-4 fill-current" />
-              ))}
-            </div>
-            <GoogleG className="h-7 w-7" />
-          </div>
-          <blockquote className="mt-6 max-w-4xl font-display text-xl font-medium leading-[1.45] sm:text-[1.7rem] sm:leading-[1.4]">
-            &ldquo;{featured.text}&rdquo;
-          </blockquote>
-          <figcaption className="mt-7 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
-            <span className="font-semibold">{featured.name}</span>
-            <span className="text-white/40">·</span>
-            <span className="text-white/50">Verified Google review · {featured.date}</span>
-          </figcaption>
-        </motion.figure>
-
-        {/* smaller reviews */}
-        <div className="grid gap-x-12 md:grid-cols-3">
-          {cards.map((t, i) => (
-            <motion.figure
-              key={t.name}
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
-              className="border-b border-white/12 py-9 md:border-b-0"
+          {googleReviews.map((t, i) => (
+            <figure
+              key={`${t.name}-${i}`}
+              className="flex w-[19rem] shrink-0 snap-start flex-col border border-white/12 bg-white/[0.04] p-5 sm:w-[21rem]"
             >
               <div className="flex items-center justify-between">
                 <div className="flex gap-1 text-gold-400">
@@ -84,18 +69,22 @@ export function Testimonials() {
                 </div>
                 <GoogleG className="h-4 w-4" />
               </div>
-              <blockquote className="mt-4 line-clamp-5 text-[0.95rem] leading-relaxed text-white/80">
+              {/* line-clamp is CSS-only: the full review text stays in the markup, and
+                  unabridged copies of all nine live at /testimonials/. */}
+              <blockquote className="mt-3 line-clamp-6 flex-1 text-[0.9rem] leading-relaxed text-white/80">
                 &ldquo;{t.text}&rdquo;
               </blockquote>
-              <figcaption className="mt-5 text-sm">
+              <figcaption className="mt-4 border-t border-white/10 pt-3 text-sm">
                 <span className="font-semibold">{t.name}</span>
                 <span className="ml-2 text-white/50">{t.date}</span>
               </figcaption>
-            </motion.figure>
+            </figure>
           ))}
         </div>
+      </Container>
 
-        <p className="mt-12 flex items-center gap-2 text-sm text-white/50">
+      <Container>
+        <p className="mt-6 flex items-center gap-2 text-sm text-white/50">
           <GoogleG className="h-4 w-4" />
           Rated <span className="font-semibold text-white">{doctor.rating.toFixed(1)}</span> across {doctor.reviews}{" "}
           Google reviews.

@@ -39,7 +39,8 @@ export function Awards() {
         {/* right timeline list */}
         <div className="lg:col-span-8">
           <div className="border-t border-navy-900/12 dark:border-white/12">
-            {awards.map((a, i) => (
+            {/* Teaser: 4 of 10. The full list is at /news-awards/, linked above. */}
+            {awards.slice(0, 4).map((a, i) => (
               <Reveal key={a.title} delay={(i % 6) * 0.05}>
                 <div className="grid grid-cols-1 gap-x-8 gap-y-1 border-b border-navy-900/12 py-6 dark:border-white/12 sm:grid-cols-[5rem_1fr]">
                   <span className="font-display text-lg font-medium tabular-nums text-teal-700/70 dark:text-teal-300/70">

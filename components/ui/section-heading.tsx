@@ -23,6 +23,7 @@ export function SectionHeading({
   title,
   description,
   align = "left",
+  layout = "stacked",
   className,
 }: {
   eyebrow?: string;
@@ -30,8 +31,40 @@ export function SectionHeading({
   title: ReactNode;
   description?: ReactNode;
   align?: "left" | "center";
+  /**
+   * "split" sets the description beside the title instead of under it, and drops the
+   * title a step down the type scale. Used by the dense homepage sections, where a
+   * stacked heading cost 222px — more than the content beneath it. Same tokens, same
+   * eyebrow, no words removed. Everything else keeps "stacked".
+   */
+  layout?: "stacked" | "split";
   className?: string;
 }) {
+  const split = layout === "split" && Boolean(description);
+
+  if (split) {
+    return (
+      <Reveal className={cn("grid gap-x-12 gap-y-4 lg:grid-cols-12", className)}>
+        <div className="lg:col-span-7">
+          {(eyebrow || index) && (
+            <div className="mb-4 flex items-baseline gap-4">
+              {index && (
+                <span className="font-display text-sm font-medium tabular-nums text-teal-700/70 dark:text-teal-300/70">
+                  {index}
+                </span>
+              )}
+              {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
+            </div>
+          )}
+          <h2 className="font-display text-[1.8rem] font-medium leading-[1.1] tracking-[-0.01em] text-navy-900 sm:text-[2.1rem] lg:text-[2.35rem] dark:text-white">
+            {title}
+          </h2>
+        </div>
+        <p className="self-end text-sm leading-relaxed text-muted sm:text-base lg:col-span-5">{description}</p>
+      </Reveal>
+    );
+  }
+
   return (
     <Reveal
       className={cn("flex flex-col gap-5", align === "center" && "items-center text-center", className)}

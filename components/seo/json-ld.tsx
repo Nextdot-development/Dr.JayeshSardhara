@@ -12,11 +12,11 @@ export function JsonLd() {
     telephone: doctor.phoneRaw,
     email: doctor.email,
     priceRange: "₹₹₹",
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: doctor.rating,
-      reviewCount: doctor.reviews,
-    },
+    // No aggregateRating / Review node, deliberately. Self-serving review markup about
+    // the practice, published by the practice, is against Google's structured-data policy
+    // for local businesses and is a manual-action risk on a medical site. It was also
+    // never on the live site: 0 of the 203 WordPress captures emitted aggregateRating,
+    // so omitting it restores parity rather than dropping anything. Decision 2026-09-04.
     address: locations.map((l) => ({
       "@type": "PostalAddress",
       name: l.name,

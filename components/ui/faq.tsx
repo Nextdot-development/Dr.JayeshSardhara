@@ -1,11 +1,27 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import { Plus } from "lucide-react";
 
-export function Faq({ items }: { items: { q: string; a: string }[] }) {
-  const [open, setOpen] = useState<number | null>(0);
+/**
+ * Accordion FAQ list.
+ *
+ * Every answer is ALWAYS in the DOM — collapsing is done with a CSS grid-rows transition,
+ * never by unmounting. That is deliberate and load-bearing: the homepage carries FAQPage
+ * JSON-LD listing all seven Q&As, and structured data may only describe content that is
+ * actually present on the page. The previous implementation mounted one answer at a time,
+ * so six of the seven answers did not exist in the markup at all. See _migration/PAGE-REBUILD.md.
+ *
+ * Collapsed-by-default: pass `defaultOpen` to expand one on mount.
+ */
+export function Faq({
+  items,
+  defaultOpen = null,
+}: {
+  items: { q: string; a: string }[];
+  defaultOpen?: number | null;
+}) {
+  const [open, setOpen] = useState<number | null>(defaultOpen);
 
   return (
     <div className="border-t border-navy-900/12 dark:border-white/12">
@@ -16,27 +32,24 @@ export function Faq({ items }: { items: { q: string; a: string }[] }) {
             <button
               type="button"
               onClick={() => setOpen(isOpen ? null : i)}
-              className="flex w-full items-center justify-between gap-6 py-6 text-left"
+              className="flex w-full items-center justify-between gap-5 py-4 text-left"
               aria-expanded={isOpen}
             >
-              <span className="font-display text-lg font-medium text-navy-900 dark:text-white">{it.q}</span>
+              <span className="font-display text-base font-medium leading-snug text-navy-900 dark:text-white">
+                {it.q}
+              </span>
               <Plus
-                className={`h-5 w-5 shrink-0 text-teal-600 transition-transform duration-300 dark:text-teal-400 ${isOpen ? "rotate-45" : ""}`}
+                className={`h-4 w-4 shrink-0 text-teal-600 transition-transform duration-300 dark:text-teal-400 ${isOpen ? "rotate-45" : ""}`}
               />
             </button>
-            <AnimatePresence initial={false}>
-              {isOpen && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                  className="overflow-hidden"
-                >
-                  <p className="max-w-2xl pb-6 leading-relaxed text-muted">{it.a}</p>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {/* grid-rows 0fr → 1fr collapses without unmounting the answer */}
+            <div
+              className={`grid transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
+            >
+              <div className="overflow-hidden">
+                <p className="max-w-2xl pb-5 text-sm leading-relaxed text-muted">{it.a}</p>
+              </div>
+            </div>
           </div>
         );
       })}

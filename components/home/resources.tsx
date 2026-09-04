@@ -4,12 +4,19 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { PostsExplorer } from "@/components/blog/posts-explorer";
 import { getPostSummaries } from "@/lib/content";
 
+/**
+ * Kept, not cut, in the 2026-09-04 density pass. The section chrome is template-authored,
+ * but the three cards it renders are migrated WordPress articles — this is the only place
+ * on the homepage that links straight into indexed post URLs, which "Blog" in the nav does
+ * not replace. Compressed instead: the category-filter and search row that PostsExplorer
+ * draws for /blog/ is suppressed here, since the teaser always shows a fixed three.
+ */
 export function Resources() {
   const posts = getPostSummaries();
   return (
-    <section className="border-y border-border bg-surface/50 py-24 lg:py-32" id="resources">
+    <section className="border-y border-border bg-surface/50 py-16 lg:py-20" id="resources">
       <Container>
-        <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+        <div className="flex flex-col items-start justify-between gap-5 md:flex-row md:items-end">
           <SectionHeading
             index="07"
             eyebrow="From the Journal"
@@ -25,8 +32,8 @@ export function Resources() {
           </a>
         </div>
 
-        <div className="mt-14">
-          <PostsExplorer posts={posts} limit={3} showFeatured={false} />
+        <div className="mt-8">
+          <PostsExplorer posts={posts} limit={3} showFeatured={false} showControls={false} />
         </div>
       </Container>
     </section>

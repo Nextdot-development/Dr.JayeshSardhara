@@ -69,14 +69,8 @@ export const trustStats = [
   { value: "5.0★", label: "Patient Rating" },
 ];
 
-export const recognitions = [
-  { label: "Best Young Neurosurgeon of India", sub: "2016 · Mumbai" },
-  { label: "Prof. R. K. Sharma Gold Medal", sub: "Best MCh Resident · 2014" },
-  { label: "Best Neurosurgery Paper", sub: "Neurology India · 2015" },
-  { label: "Next-Gen Young Neurosurgeon", sub: "INU · 2016" },
-  { label: "Neurological Society of India", sub: "Member" },
-  { label: `${PUBLICATIONS} Research Publications`, sub: "Peer-reviewed" },
-];
+// `recognitions` removed 2026-09-04 with the homepage TrustStrip section: its six labels
+// were a subset of the ten in `awards`, which /news-awards/ and the homepage both render.
 
 export type Expertise = {
   slug: string;
@@ -212,56 +206,16 @@ export const conditions = {
   },
 };
 
-export type Procedure = {
-  name: string;
-  category: "Brain" | "Spine";
-  desc: string;
-  duration: string;
-};
+// `Procedure` / `procedures` removed 2026-09-04 with the homepage Procedures section:
+// it duplicated Expertise and pointed at the same two treatment pages. See lib/treatments.ts,
+// which carries the per-page procedure lists that /brain-surgery/ and /spine-surgery/ render.
 
-export const procedures: Procedure[] = [
-  { name: "Brain Tumor Surgery", category: "Brain", desc: "Image-guided resection of intracranial tumors.", duration: "3–6 hrs" },
-  { name: "Craniotomy", category: "Brain", desc: "Precision access to the brain for tumor or vascular repair.", duration: "3–5 hrs" },
-  { name: "Deep Brain Stimulation", category: "Brain", desc: "Neuromodulation for Parkinson's and tremor.", duration: "4–6 hrs" },
-  { name: "Microdiscectomy", category: "Spine", desc: "Keyhole removal of herniated disc material.", duration: "1–2 hrs" },
-  { name: "Spinal Fusion", category: "Spine", desc: "Stabilising the spine to relieve chronic pain.", duration: "2–4 hrs" },
-  { name: "Endoscopic Spine Surgery", category: "Spine", desc: "Ultra-minimally invasive endoscopic decompression.", duration: "1–2 hrs" },
-];
-
-export const testimonials = [
-  {
-    name: "Rajesh M.",
-    treatment: "Brain Tumor Surgery",
-    rating: 5,
-    quote:
-      "Dr. Sardhara explained every step with such clarity that my fear disappeared. The surgery was flawless and I was walking within days.",
-    recovery: "Discharged in 4 days",
-  },
-  {
-    name: "Priya K.",
-    treatment: "Endoscopic Spine Surgery",
-    rating: 5,
-    quote:
-      "After years of sciatica, a single keyhole procedure gave me my life back. No long scar, barely any pain — remarkable.",
-    recovery: "Back to work in 2 weeks",
-  },
-  {
-    name: "Anil S.",
-    treatment: "Deep Brain Stimulation",
-    rating: 5,
-    quote:
-      "My Parkinson's tremors reduced dramatically. The whole team treated my father with dignity and warmth throughout.",
-    recovery: "Tremor reduced ~70%",
-  },
-  {
-    name: "Meera D.",
-    treatment: "Microdiscectomy",
-    rating: 5,
-    quote:
-      "The most compassionate surgeon we've met. Honest advice, no upselling, and an outcome better than we hoped for.",
-    recovery: "Pain-free in 10 days",
-  },
-];
+// The template shipped a `testimonials` array here: four invented patients ("Rajesh M.",
+// "Priya K.", "Anil S.", "Meera D.") with invented procedures and invented recovery
+// statistics ("Discharged in 4 days", "Tremor reduced ~70%"). Deleted 2026-09-04. It was
+// never rendered, but fabricated patient outcomes have no business sitting in a
+// neurosurgeon's repo one careless import away from production. Real patient quotes come
+// from `googleReviews` below, traced to the practice's live Google widget.
 
 // Real Google reviews imported from the practice's live widget.
 export type GoogleReview = { name: string; date: string; rating: number; text: string };
@@ -440,19 +394,34 @@ export const posts: Post[] = [
 
 export const nav = [
   { label: "Home", href: "/" },
-  { label: "About", href: "/about/" },
+  {
+    // Fellowship moved in here 2026-09-04. Adding "Testimonials" as a 9th top-level item
+    // pushed the header bar to ~1097px of content, which overflowed its container between
+    // 1024px (where the desktop nav switches on) and ~1104px. Folding Fellowship under
+    // About removes one item and clears the overlap. Matches the Treatments pattern: the
+    // parent's own href is repeated as the first child so /about/ stays one click away.
+    label: "About",
+    href: "/about/",
+    children: [
+      { label: "About the Surgeon", href: "/about/" },
+      { label: "Fellowship", href: "/fellowship/" },
+    ],
+  },
   {
     label: "Treatments",
     href: "/brain-surgery/",
     children: [
       { label: "Brain Surgery", href: "/brain-surgery/" },
       { label: "Spine Surgery", href: "/spine-surgery/" },
+      // Added 2026-09-04: /conditions/ went live, so it needs a way in.
+      { label: "Conditions Treated", href: "/conditions/" },
       { label: "Surgeries", href: "/surgeries/" },
       { label: "Brain Tumour", href: "/brain-tumor/" },
     ],
   },
+  // Added 2026-09-04 alongside /conditions/.
+  { label: "Testimonials", href: "/testimonials/" },
   { label: "News & Awards", href: "/news-awards/" },
-  { label: "Fellowship", href: "/fellowship/" },
   { label: "Blog", href: "/blog/" },
   { label: "Contact", href: "/contact/" },
 ];
