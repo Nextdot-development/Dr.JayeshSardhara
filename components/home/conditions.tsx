@@ -3,53 +3,56 @@ import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Reveal } from "@/components/ui/reveal";
+import { Icon } from "@/components/ui/icon";
 import { conditions } from "@/lib/data";
 
-/** Homepage teaser: 3 per group. The full list of 11 lives at /conditions/. */
-const PER_GROUP = 3;
-
-/** Entries carrying migrated WordPress copy lead; the one-line template entries follow. */
-function teaser(items: { name: string; desc: string; long?: string }[]) {
-  return [...items].sort((a, b) => Number(Boolean(b.long)) - Number(Boolean(a.long))).slice(0, PER_GROUP);
-}
-
 /**
- * Density pass 2026-09-04: was two stacked lists side by side, each row running the full
- * column width, which made six entries 1,000px tall. Now one 3-across card grid — the group
- * ("Brain" / "Spine") moves onto the card as a label instead of costing a header row.
- * Same six entries, same migrated copy, nothing truncated.
+ * Section 6 of the live WordPress homepage — four conditions across, each with an icon.
+ *
+ * These are exactly the four the export carried (Brain Tumor, Spine Injury, Stroke,
+ * Sciatica) with their migrated copy, in the export's order. The template one-liners that
+ * used to pad this grid to six are not homepage content; the full list of eleven is at
+ * /conditions/, linked below.
  */
+const CARDS = [
+  { group: "brain", name: "Brain Tumors", icon: "Brain", href: "/brain-surgery/" },
+  { group: "spine", name: "Spine Injury", icon: "Bone", href: "/spine-surgery/" },
+  { group: "brain", name: "Stroke", icon: "Activity", href: "/brain-surgery/" },
+  { group: "spine", name: "Sciatica", icon: "HeartPulse", href: "/spine-surgery/" },
+] as const;
+
 export function Conditions() {
-  const cards = [
-    ...teaser(conditions.brain.items).map((it) => ({ ...it, group: "Brain", href: "/brain-surgery/" })),
-    ...teaser(conditions.spine.items).map((it) => ({ ...it, group: "Spine", href: "/spine-surgery/" })),
-  ];
+  const cards = CARDS.map((c) => {
+    const item = conditions[c.group].items.find((i) => i.name === c.name)!;
+    return { ...c, body: item.long ?? item.desc };
+  });
 
   return (
-    <section className="border-y border-border bg-surface/50 py-16 lg:py-20" id="conditions">
+    <section className="border-y border-border bg-surface/50 py-20 lg:py-24" id="conditions">
       <Container>
         <SectionHeading
           layout="split"
-          index="03"
+          index="01"
           eyebrow="Conditions We Treat"
           title="Common Neurological Conditions We Address"
           description="Every condition is met with an accurate diagnosis and a tailored, evidence-based plan."
         />
 
-        <div className="mt-10 grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
           {cards.map((c, i) => (
-            <Reveal key={c.name} delay={(i % 3) * 0.05}>
+            <Reveal key={c.name} delay={(i % 4) * 0.05}>
               <Link
                 href={c.href}
-                className="group flex h-full flex-col border-t border-navy-900/15 pt-4 dark:border-white/15"
+                className="group flex h-full flex-col border-t border-navy-900/15 pt-5 dark:border-white/15"
               >
-                <span className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-teal-700/80 dark:text-teal-300/80">
-                  {c.group}
-                </span>
-                <h3 className="mt-2 font-display text-lg font-medium text-navy-900 transition-colors group-hover:text-teal-700 dark:text-white dark:group-hover:text-teal-300">
+                <Icon
+                  name={c.icon}
+                  className="h-8 w-8 text-teal-600 transition-colors group-hover:text-teal-700 dark:text-teal-400"
+                />
+                <h3 className="mt-5 font-display text-xl font-medium text-navy-900 transition-colors group-hover:text-teal-700 dark:text-white dark:group-hover:text-teal-300">
                   {c.name}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{"long" in c ? c.long : c.desc}</p>
+                <p className="mt-3 text-sm leading-relaxed text-muted">{c.body}</p>
               </Link>
             </Reveal>
           ))}
@@ -57,7 +60,7 @@ export function Conditions() {
 
         <Link
           href="/conditions/"
-          className="group mt-10 inline-flex items-center gap-2 text-sm font-medium text-navy-800 dark:text-white/80"
+          className="group mt-12 inline-flex items-center gap-2 text-sm font-medium text-navy-800 dark:text-white/80"
         >
           All conditions we treat
           <ArrowRight className="h-4 w-4 text-teal-600 transition-transform group-hover:translate-x-1 dark:text-teal-400" />

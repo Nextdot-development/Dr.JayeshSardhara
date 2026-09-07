@@ -8,27 +8,27 @@ import { videos } from "@/lib/data";
  * Surgical technique and patient-education videos, migrated from the live homepage's
  * Elementor video widgets. Every player is click-to-load — see components/ui/video-embed.tsx.
  *
- * Density pass 2026-09-04: these were already click-to-play facades in a 3-across grid, so
- * 5 items wrapped onto two rows. Widened to 5-across at lg so all five sit on one row.
- * Same five videos, same facades, no player loads until clicked.
+ * Three across. The homepage carries five videos in total; the export attaches two of them
+ * to sections 7 and 8, which render them inline (see lib/data.ts `homeInlineVideos`), and
+ * these three to the gallery. All five still render, each where the live page had it.
  */
 export function Videos() {
   const items = videos.home;
   if (!items?.length) return null;
 
   return (
-    <section className="border-t border-border py-16 lg:py-20" id="videos">
+    <section className="border-t border-border py-20 lg:py-24" id="videos">
       <Container>
         <SectionHeading
           layout="split"
-          index="08"
+          index="05"
           eyebrow="Watch"
           title="Surgical technique & patient education"
           description="Recorded procedures, explainers and interviews — from the operating theatre and the consulting room."
         />
-        <div className="mt-8 grid gap-x-5 gap-y-8 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5">
+        <div className="mt-12 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((v, i) => (
-            <Reveal key={`${v.id}-${i}`} delay={(i % 5) * 0.05}>
+            <Reveal key={`${v.id}-${i}`} delay={(i % 3) * 0.05}>
               <VideoEmbed video={v} />
             </Reveal>
           ))}

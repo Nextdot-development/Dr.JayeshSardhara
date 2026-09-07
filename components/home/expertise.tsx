@@ -14,7 +14,7 @@ export function Expertise() {
       <Container>
         <div className="grid gap-8 md:grid-cols-2 md:items-end">
           <SectionHeading
-            index="01"
+            index="02"
             eyebrow="Areas of Expertise"
             title="Subspecialty care across the brain & spine"
           />

@@ -70,7 +70,10 @@ function readAll(): ContentDoc[] {
       }
       if (!entry.name.endsWith(".md")) continue;
 
-      const raw = fs.readFileSync(full, "utf8");
+      // Normalised to LF before parsing. The repo stores these files with LF, but a Windows
+      // checkout under core.autocrlf=true rewrites them to CRLF — which the frontmatter
+      // regex below would not match, silently dropping every document.
+      const raw = fs.readFileSync(full, "utf8").replace(/\r\n/g, "\n");
       const match = /^---\n([\s\S]*?)\n---\n?/.exec(raw);
       if (!match) continue;
 

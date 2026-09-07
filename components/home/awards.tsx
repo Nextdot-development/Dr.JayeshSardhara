@@ -17,7 +17,8 @@ export function Awards() {
         {/* left intro + metrics */}
         <div className="lg:col-span-4">
           <div className="lg:sticky lg:top-28">
-            <SectionHeading index="06" eyebrow="Awards & Recognition" title="A career defined by recognition." />
+            {/* "Honours and Awards" is the live WordPress section 9 heading, verbatim. */}
+            <SectionHeading index="04" eyebrow="Awards & Recognition" title="Honours and Awards" />
             <p className="mt-5 leading-relaxed text-muted">
               National awards, gold medals and international honours — reflecting a commitment to surgical excellence and
               research.

@@ -1,5 +1,5 @@
 import { Container } from "@/components/ui/container";
-import { SectionHeading } from "@/components/ui/section-heading";
+import { Eyebrow } from "@/components/ui/section-heading";
 import { Faq } from "@/components/ui/faq";
 import { homeFaqs } from "@/lib/data";
 
@@ -11,18 +11,31 @@ import { homeFaqs } from "@/lib/data";
  * <Faq> keeps every answer mounted and collapses with CSS, so all 7 questions AND all 7
  * answers are in the served markup — see the note in components/ui/faq.tsx.
  *
- * Two columns and collapsed-by-default, for density. Nothing is removed.
+ * Label left, one full-width column of rows on the right: at two columns the questions wrapped
+ * to three lines each and the rules stopped reading as a single list.
  */
 export function Faqs() {
-  const half = Math.ceil(homeFaqs.length / 2);
-
   return (
-    <section className="border-t border-border py-16 lg:py-20" id="faqs">
+    <section className="border-t border-border py-20 lg:py-24" id="faqs">
       <Container>
-        <SectionHeading eyebrow="FAQs" title="Questions patients ask" />
-        <div className="mt-8 grid gap-x-14 lg:grid-cols-2">
-          <Faq items={homeFaqs.slice(0, half)} />
-          <Faq items={homeFaqs.slice(half)} />
+        <div className="grid gap-x-16 gap-y-8 lg:grid-cols-12">
+          <div className="lg:col-span-4">
+            <div className="lg:sticky lg:top-28">
+              <div className="flex items-baseline gap-4">
+                <span className="font-display text-sm font-medium tabular-nums text-teal-700/70 dark:text-teal-300/70">
+                  07
+                </span>
+                <Eyebrow>FAQs</Eyebrow>
+              </div>
+              <h2 className="mt-5 font-display text-[1.9rem] font-medium leading-[1.1] tracking-[-0.01em] text-navy-900 sm:text-[2.2rem] dark:text-white">
+                Questions patients ask
+              </h2>
+            </div>
+          </div>
+
+          <div className="lg:col-span-8">
+            <Faq items={homeFaqs} />
+          </div>
         </div>
       </Container>
     </section>

@@ -22,6 +22,7 @@ export function JsonLd() {
       name: l.name,
       streetAddress: l.address,
       addressLocality: "Mumbai",
+      addressRegion: "Maharashtra",
       addressCountry: "IN",
     })),
     availableService: [
@@ -47,6 +48,12 @@ export function JsonLd() {
  * Migrated pages render THIS instead of <JsonLd /> above. The two are never merged or
  * deduped: the stored graph is what the page is already indexed with, and the generated
  * one is a different (richer) shape for the new template-only routes.
+ *
+ * `/` and `/about/` are the two exceptions — they render both, as two separate scripts.
+ * The migration brief requires a Physician entity on those pages and the WordPress
+ * capture has none (its graph is BreadcrumbList + Organization + WebPage + WebSite, plus
+ * FAQPage on `/`). Two top-level blocks with distinct @types is well-formed and is how
+ * the additional entity is added without editing the stored capture.
  */
 export function StoredJsonLd({ schema }: { schema: string[] }) {
   return (

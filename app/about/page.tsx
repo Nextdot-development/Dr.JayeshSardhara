@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { StoredJsonLd } from "@/components/seo/json-ld";
+import { JsonLd, StoredJsonLd } from "@/components/seo/json-ld";
 import { getDocByFileSlug, metadataFromDoc } from "@/lib/content";
 import Image from "next/image";
 import { Container } from "@/components/ui/container";
@@ -14,6 +14,23 @@ import { doctor, affiliations, awards, expertise, SURGERIES_TOTAL } from "@/lib/
 const doc = getDocByFileSlug("about")!;
 
 export const metadata: Metadata = metadataFromDoc(doc);
+
+/**
+ * The four "Areas of Expertise" entries the live /about/ page carried, in its document
+ * order — which is not the order they sit in `expertise` (that array is ordered for the
+ * homepage grid). Selected by slug rather than filtered on `long`, so adding migrated
+ * copy to a fifth entry elsewhere cannot silently append a card to this page.
+ */
+const ABOUT_EXPERTISE_ORDER = [
+  "brain-tumor-surgery",
+  "endoscopic-skull-base",
+  "minimally-invasive-spine",
+  "pediatric-neurosurgery",
+] as const;
+
+const aboutExpertise = ABOUT_EXPERTISE_ORDER.map(
+  (slug) => expertise.find((e) => e.slug === slug)!,
+);
 
 const stats = [
   { value: SURGERIES_TOTAL, label: "Surgeries Performed" },
@@ -40,7 +57,9 @@ const philosophy = [
 export default function AboutPage() {
   return (
     <>
+      {/* Stored capture plus the Physician entity it lacks — see components/seo/json-ld.tsx. */}
       <StoredJsonLd schema={doc.schema} />
+      <JsonLd />
       <PageHero
         eyebrow="About Dr. Jayesh Sardhara"
         breadcrumb="About"
@@ -84,7 +103,8 @@ export default function AboutPage() {
                 recovery for his patients.
               </p>
               <p>
-                A prolific academic, he has authored {doctor.publications} peer-reviewed publications and two books, holds
+                A prolific academic, he has authored {doctor.publications}{" "}
+                peer-reviewed publications and two books, holds
                 a patent, and chairs the Young Neurosurgical Forum and the Innovation &amp; Patent Cell at the
                 Neurological Society of India.
               </p>
@@ -93,7 +113,8 @@ export default function AboutPage() {
                 {doctor.name}, a highly experienced Senior Consultant in Neuro and Spine Surgery at Fortis Hospital,
                 Mulund, boasts {doctor.experienceYears} years of expertise in minimally invasive endoscopic brain and
                 spine surgeries. His credentials include an MBBS and MS in General Surgery from MPSMC, Saurashtra
-                University, Gujarat, and an M.Ch. in Neurosurgery from SGPGIMS, Lucknow. {doctor.shortName} underwent
+                University, Gujarat, and an M.Ch. in Neurosurgery from SGPGIMS, Lucknow. {doctor.shortName}{" "}
+                underwent
                 comprehensive training in minimally invasive spine surgery techniques in Japan and South Korea. He is
                 renowned for his research in craniovertebral junction spine surgery and complex spine deformity surgery,
                 earning him accolades like the &ldquo;Best Young Neurosurgeon India&rdquo; award in 2016. With{" "}
@@ -185,14 +206,14 @@ export default function AboutPage() {
         <Container>
           <SectionHeading eyebrow="Expertise" title="Areas of Expertise" />
           <div className="mt-12 grid gap-x-12 gap-y-10 lg:grid-cols-2">
-            {expertise
-              .filter((e) => e.long)
-              .map((e) => (
-                <Reveal key={e.slug}>
-                  <h3 className="font-display text-xl font-medium text-navy-900 dark:text-white">{e.title}</h3>
-                  <p className="mt-3 leading-relaxed text-muted">{e.long}</p>
-                </Reveal>
-              ))}
+            {aboutExpertise.map((e) => (
+              <Reveal key={e.slug}>
+                <h3 className="font-display text-xl font-medium text-navy-900 dark:text-white">
+                  {e.longTitle ?? e.title}
+                </h3>
+                <p className="mt-3 leading-relaxed text-muted">{e.long}</p>
+              </Reveal>
+            ))}
           </div>
         </Container>
       </section>

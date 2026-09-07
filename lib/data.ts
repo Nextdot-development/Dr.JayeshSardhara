@@ -79,6 +79,15 @@ export type Expertise = {
   short: string;
   /** Full description migrated from the live /about/ page. Not present on every entry. */
   long?: string;
+  /**
+   * The heading the live /about/ page used above `long`, where it differs from `title`.
+   *
+   * `title` names the card in our own navigation (homepage Expertise grid), and three of
+   * these four were renamed there to match the treatment pages they link to. That rename
+   * must not reach /about/: the WordPress headings are indexed SEO copy, so the section
+   * that renders the migrated `long` copy renders the migrated heading with it.
+   */
+  longTitle?: string;
   href: string;
 };
 
@@ -86,6 +95,7 @@ export const expertise: Expertise[] = [
   {
     slug: "brain-tumor-surgery",
     title: "Brain Tumor Surgery",
+    longTitle: "Brain Tumor & Spine Surgery",
     icon: "Brain",
     short:
       "Precise removal of benign and malignant brain tumors using neuro-navigation and intra-operative monitoring.",
@@ -104,6 +114,7 @@ export const expertise: Expertise[] = [
   {
     slug: "endoscopic-skull-base",
     title: "Endoscopic Skull Base Surgery",
+    longTitle: "Endoscopic Skull Surgery",
     icon: "ScanEye",
     short:
       "Keyhole endoscopic approaches to pituitary and skull-base tumors with no external incisions.",
@@ -119,17 +130,18 @@ export const expertise: Expertise[] = [
       "Gentle, specialised neurosurgical care for children — hydrocephalus, congenital and tumor conditions.",
     href: "/brain-surgery",
     long:
-      "Pediatric neurosurgery is a specialized subspecialty within neurosurgery that is wholly committed to diagnosing and treating neurological conditions and disorders afflicting children, from infants to adolescents. Highly trained pediatric neurosurgeons possess expertise in addressing a diverse spectrum of conditions, including congenital brain and spinal anomalies, brain tumors, epilepsy, and head injuries in children.",
+      "Pediatric neurosurgery is a specialized subspecialty within neurosurgery that is wholly committed to diagnosing and treating neurological conditions and disorders afflicting children, from infants to adolescents. In this field, highly trained pediatric neurosurgeons possess expertise in addressing a diverse spectrum of conditions, including congenital brain and spinal anomalies, brain tumors, epilepsy, and head injuries in children. Their practice is characterized by providing comprehensive care specifically tailored to meet the unique needs of young patients, ensuring their overall well-being and healthy development.",
   },
   {
     slug: "minimally-invasive-spine",
     title: "Minimally Invasive Spine Surgery",
+    longTitle: "Endoscopic Spine Surgery",
     icon: "Activity",
     short:
       "Muscle-sparing, small-incision techniques that mean less pain, smaller scars and faster recovery.",
     href: "/spine-surgery",
     long:
-      "Endoscopic spine surgery is a cutting-edge, minimally invasive technique utilised by neurosurgeons to treat various spinal conditions. This approach involves the use of specialised instruments and an endoscope equipped with a camera, allowing for precise visualisation and treatment of spinal abnormalities through small incisions. The numerous advantages of endoscopic spine surgery include shorter recovery times, less postoperative pain, reduced scarring, and lower complication rates compared to traditional open surgeries.",
+      "Endoscopic spine surgery is a cutting-edge, minimally invasive technique utilised by neurosurgeons to treat various spinal conditions. This approach involves the use of specialised instruments and an endoscope equipped with a camera, allowing for precise visualisation and treatment of spinal abnormalities through small incisions. The numerous advantages of endoscopic spine surgery include shorter recovery times, less postoperative pain, reduced scarring, and lower complication rates compared to traditional open surgeries. This innovative method facilitates a quicker return to normal activities, making it a preferred option for many spinal conditions.",
   },
   {
     slug: "neurovascular-surgery",
@@ -423,7 +435,7 @@ export const nav = [
   { label: "Testimonials", href: "/testimonials/" },
   { label: "News & Awards", href: "/news-awards/" },
   { label: "Blog", href: "/blog/" },
-  { label: "Contact", href: "/contact/" },
+  { label: "Contact", href: "/contact-us/" },
 ];
 
 
@@ -525,12 +537,19 @@ export type VideoItem = {
 };
 
 export const videos: Record<string, VideoItem[]> = {
+  /**
+   * Section 10, the standalone video gallery — three items.
+   *
+   * The homepage carries five videos in total, and the export attaches them to three
+   * different sections: one inside "Why Choose Dr. Jayesh Sardhara?" (section 7), one
+   * inside the Fortis Institute block (section 8), and these three in the gallery. The
+   * two inline ones are `homeInlineVideos` below; all five still render, each where the
+   * live page had it.
+   */
   home: [
-    { id: "jC20REdQTX8", platform: "youtube", title: "Witness The Remarkable Journey of Dr. Jayesh Sardhara" },
-    { id: "tdKR-U_vF0Q", platform: "youtube", title: "Redefining Neurosurgery: Minimally Invasive Brain and Spine Surgery" },
+    { id: "Xubuvrwripg", platform: "youtube", title: "Surgical technique of full endoscopic uniportal interlaminar discectomy" },
     { id: "LjYxBTmFd8I", platform: "youtube", title: "What is the main cause of brain cancer? Symptoms, types and treatment" },
     { id: "ZNyNmKAzXtw", platform: "youtube", title: "Spine surgery is really safe now" },
-    { id: "Xubuvrwripg", platform: "youtube", title: "Surgical technique of full endoscopic uniportal interlaminar discectomy" },
   ],
   "news-awards": [
     { id: "ODg6P80scuY", platform: "youtube", title: "Saif Ali Khan attacked — spinal fluid leak surgery explained" },
@@ -553,12 +572,35 @@ export const videos: Record<string, VideoItem[]> = {
  * do not rewrite. Sections flagged visible:false in the export are NOT here.
  */
 
-/** Section 2 — the three icon boxes under the hero. */
+/**
+ * Section 2 — the three icon boxes under the hero.
+ *
+ * Titles and descriptions are verbatim. `icon` is ours: the export stored Elementor icon
+ * class names, not assets, so there was nothing to migrate — these are the nearest
+ * equivalents from the set components/ui/icon.tsx already maps.
+ */
 export const threePillars = [
-  { title: "Diagnose", description: "Examination & Diagnosis" },
-  { title: "Treatment", description: "Treatment of the disease" },
-  { title: "Care Healthy", description: "Care and recuperation" },
+  { title: "Diagnose", description: "Examination & Diagnosis", icon: "ScanEye" },
+  { title: "Treatment", description: "Treatment of the disease", icon: "Stethoscope" },
+  { title: "Care Healthy", description: "Care and recuperation", icon: "HeartPulse" },
 ];
+
+/**
+ * The two homepage videos the export attaches to a section rather than to the gallery —
+ * sections 7 and 8. Rendered beside that section's copy, as on the live page.
+ */
+export const homeInlineVideos: Record<"whyChoose" | "fortis", VideoItem> = {
+  whyChoose: {
+    id: "jC20REdQTX8",
+    platform: "youtube",
+    title: "Witness The Remarkable Journey of Dr. Jayesh Sardhara",
+  },
+  fortis: {
+    id: "tdKR-U_vF0Q",
+    platform: "youtube",
+    title: "Redefining Neurosurgery: Minimally Invasive Brain and Spine Surgery",
+  },
+};
 
 /** Section 7 — "Why Choose Dr. Jayesh Sardhara?" */
 export const whyChooseSardhara = [
