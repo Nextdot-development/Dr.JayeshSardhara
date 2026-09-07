@@ -35,6 +35,17 @@ import { getAllDocs } from "@/lib/content";
 const TEMPLATE_ONLY_ROUTES = ["/conditions/", "/testimonials/", "/appointment/"] as const;
 const TEMPLATE_ONLY_PUBLISHED = new Date("2026-09-04");
 
+/**
+ * `/contact-us/` is not template-only — it is an original WordPress URL that the live
+ * sitemap lists, served by its own hand-built route (app/contact-us/page.tsx) rather than
+ * from `content/`, so getAllDocs() cannot find it. Listed explicitly with the lastmod the
+ * live sitemap reports for it.
+ *
+ * `/contact/` is deliberately absent: it 301s here, and redirects do not belong in a sitemap.
+ */
+const CONTACT_ROUTE = "/contact-us/";
+const CONTACT_MODIFIED = new Date("2025-09-06T13:10:55+05:30");
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const migrated = getAllDocs()
     .filter((doc) => !doc.noindex)
@@ -49,5 +60,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: TEMPLATE_ONLY_PUBLISHED,
   }));
 
-  return [...migrated, ...templateOnly];
+  return [
+    ...migrated,
+    ...templateOnly,
+    { url: `${siteUrl}${CONTACT_ROUTE}`, lastModified: CONTACT_MODIFIED },
+  ];
 }

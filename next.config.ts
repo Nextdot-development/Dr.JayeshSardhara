@@ -13,9 +13,26 @@ const nextConfig: NextConfig = {
 
   async redirects() {
     return [
-      // The only two URL changes in the migration — see _migration/url-map.csv.
-      { source: "/contact-us", destination: "/contact/", permanent: true },
+      /**
+       * `/contact-us/` is the ORIGINAL WordPress URL and keeps serving the page itself
+       * (app/contact-us/page.tsx) — it is indexed and carries backlinks, so it was restored
+       * to its own path rather than redirected away. `/contact/` is the newer path this
+       * project briefly used; it redirects into the original so nothing that already links
+       * to it breaks.
+       */
+      { source: "/contact", destination: "/contact-us/", permanent: true },
+
+      // All 169 posts sit in the single "uncategorized" category, so this archive was a
+      // duplicate of /blog/. Redirected rather than reproduced; the 301 preserves its equity.
       { source: "/category/uncategorized", destination: "/blog/", permanent: true },
+
+      /**
+       * Elementor header/footer template stubs. These were never real pages: the LIVE site
+       * already answers both with `301 -> /`. Matching that keeps behaviour identical to
+       * production instead of returning 404 where WordPress redirected.
+       */
+      { source: "/elementor-hf/header", destination: "/", permanent: true },
+      { source: "/elementor-hf/footer", destination: "/", permanent: true },
     ];
   },
 
