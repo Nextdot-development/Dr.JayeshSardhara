@@ -64,7 +64,14 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       className={`${jakarta.variable} ${fraunces.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+        {/* `forcedTheme` because the dark-mode switch has been removed from the navbar.
+            Without it `enableSystem` would still flip the whole site to dark for anyone
+            whose OS is set to dark, and a visitor who had toggled dark before would stay
+            dark forever via next-themes' localStorage entry — in both cases with no
+            control left to get back. Forcing light ignores both and pins the one theme
+            the site now ships. The provider itself stays so the `dark:` variants
+            throughout the components remain valid and this is a one-line revert. */}
+        <ThemeProvider attribute="class" forcedTheme="light" disableTransitionOnChange>
           <ScrollProgress />
           <a
             href="#main"

@@ -9,7 +9,6 @@ import { nav, doctor } from "@/lib/data";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/ui/logo";
-import { ThemeToggle } from "./theme-toggle";
 import { cn } from "@/lib/utils";
 
 export function Navbar() {
@@ -84,7 +83,6 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <ThemeToggle className="hidden sm:inline-flex" />
           <Button href="/appointment/" size="sm" className="hidden md:inline-flex">
             <Phone className="h-4 w-4" /> Book Appointment
           </Button>
@@ -135,7 +133,6 @@ export function Navbar() {
                 <Button href="/appointment/" className="flex-1">
                   Book Appointment
                 </Button>
-                <ThemeToggle />
               </div>
             </Container>
           </motion.div>
