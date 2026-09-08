@@ -8,6 +8,7 @@ import { ChevronDown, Menu, Phone, X } from "lucide-react";
 import { nav, doctor } from "@/lib/data";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/ui/logo";
 import { ThemeToggle } from "./theme-toggle";
 import { cn } from "@/lib/utils";
 
@@ -34,9 +35,7 @@ export function Navbar() {
     >
       <Container className="flex items-center justify-between gap-4">
         <Link href="/" className="group flex items-center gap-3" aria-label={doctor.name}>
-          <span className="grid h-10 w-10 place-items-center rounded-md bg-navy-900 font-display text-lg font-medium text-white transition-colors group-hover:bg-teal-600 dark:bg-white dark:text-navy-900">
-            JS
-          </span>
+          <Logo height={40} priority className="transition-opacity group-hover:opacity-90" />
           <span className="hidden leading-tight sm:block">
             <span className="block text-sm font-bold text-navy-900 dark:text-white">{doctor.name}</span>
             <span className="block text-[11px] font-medium uppercase tracking-wider text-muted">

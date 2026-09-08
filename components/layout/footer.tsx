@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { Container } from "@/components/ui/container";
+import { Logo } from "@/components/ui/logo";
 import { doctor, locations, nav, mapEmbed } from "@/lib/data";
 
 const socials: { label: string; path: string }[] = [
@@ -23,10 +24,8 @@ export function Footer() {
     <footer className="mt-24 border-t border-border bg-surface">
       <Container className="grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-4">
         <div className="lg:col-span-1">
-          <Link href="/" className="flex items-center gap-3">
-            <span className="grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br from-navy-800 to-teal-600 font-display text-lg font-semibold text-white shadow-teal">
-              JS
-            </span>
+          <Link href="/" className="flex items-center gap-3" aria-label={doctor.name}>
+            <Logo height={44} />
             <span className="text-sm font-bold text-navy-900 dark:text-white">{doctor.name}</span>
           </Link>
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted">{doctor.intro}</p>
