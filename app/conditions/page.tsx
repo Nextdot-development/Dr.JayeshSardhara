@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { JsonLd } from "@/components/seo/json-ld";
+import { pageMetadata } from "@/lib/seo";
+import { BreadcrumbJsonLd, JsonLd } from "@/components/seo/json-ld";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/ui/container";
@@ -8,11 +9,11 @@ import { Reveal } from "@/components/ui/reveal";
 import { CtaBand } from "@/components/ui/cta-band";
 import { conditions } from "@/lib/data";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/conditions",
   title: "Conditions Treated",
-  description:
-    "Brain and spine conditions treated — from brain tumors, aneurysms and Parkinson's to herniated discs, sciatica, spinal stenosis and scoliosis.",
-};
+  description: "Brain and spine conditions treated — from brain tumors, aneurysms and Parkinson's to herniated discs, sciatica, spinal stenosis and scoliosis.",
+});
 
 export default function ConditionsPage() {
   const groups = [
@@ -25,6 +26,12 @@ export default function ConditionsPage() {
       {/* Template-only route: keeps the generated Physician schema. Migrated pages
           render <StoredJsonLd /> instead — the two are never merged. */}
       <JsonLd />
+      <BreadcrumbJsonLd
+        trail={[
+          { name: "Home", path: "/" },
+          { name: "Conditions", path: "/conditions" },
+        ]}
+      />
       <PageHero
         eyebrow="Conditions We Treat"
         breadcrumb="Conditions"

@@ -1,4 +1,5 @@
 import { doctor, siteUrl, locations } from "@/lib/data";
+import { canonicalUrl } from "@/lib/seo";
 
 export function JsonLd() {
   const schema = {
@@ -32,6 +33,37 @@ export function JsonLd() {
       "Minimally Invasive Spine Surgery",
       "Deep Brain Stimulation",
     ].map((s) => ({ "@type": "MedicalProcedure", name: s })),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+/**
+ * BreadcrumbList for the hand-built routes.
+ *
+ * ONLY for routes with no WordPress capture. The 197 migrated pages already carry a
+ * BreadcrumbList inside their stored graph, and emitting a second one would put two
+ * conflicting trails on the same document.
+ *
+ * `trail` must mirror what PageHero actually renders — that component shows
+ * `Home / <breadcrumb>`, so the trail passed in is the same two levels. Schema that
+ * claims a hierarchy the page does not display is exactly what Google penalises.
+ */
+export function BreadcrumbJsonLd({ trail }: { trail: { name: string; path: string }[] }) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: trail.map((c, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: c.name,
+      item: canonicalUrl(c.path),
+    })),
   };
 
   return (

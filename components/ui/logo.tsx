@@ -8,10 +8,16 @@ import { cn } from "@/lib/utils";
  * Single source of truth for the logo: the navbar and the footer both render this, so a
  * future artwork change is one file swap plus the two constants below — no component edits.
  *
- * The asset is a 107x107 square carrying its own maroon field (#8F1B1B) and its own
+ * The asset is a 192x192 square carrying its own maroon field (#8F1B1B) and its own
  * rounded corners, baked in. Width is DERIVED from the requested height rather than being
  * passed in independently: callers pick a height to match the layout and the aspect ratio
  * is preserved for them, so the mark can never be stretched or squashed by a caller.
+ *
+ * Deliberately NO `sizes` prop. Passing `sizes` puts next/image into responsive mode: it
+ * builds the srcset from `deviceSizes` (640…3840) instead of `imageSizes` (16…384) and
+ * points the `src` fallback at w=3840 — i.e. the 192px artwork upscaled to 3840px to fill
+ * a 40px box, which is what made the mark render soft. Without it, a fixed width/height
+ * image emits a compact 1x/2x srcset, which is exactly what this is.
  *
  * Deliberately no `rounded-*` here. The artwork already defines its corner radius, and a
  * CSS radius on top would clip the maroon field — cropping the logo rather than framing it.
@@ -23,8 +29,8 @@ import { cn } from "@/lib/utils";
  * These MUST track the file: the rendered box is computed from them, so a mismatch between
  * the constants and the artwork is exactly how a logo gets silently distorted.
  */
-const LOGO_W = 107;
-const LOGO_H = 107;
+const LOGO_W = 192;
+const LOGO_H = 192;
 
 export function Logo({
   height = 40,
@@ -46,7 +52,6 @@ export function Logo({
       width={width}
       height={height}
       priority={priority}
-      sizes={`${width}px`}
       className={cn("shrink-0 object-contain", className)}
       style={{ width, height }}
     />

@@ -7,6 +7,7 @@ import { Footer } from "@/components/layout/footer";
 import { FloatingWhatsApp } from "@/components/layout/floating-whatsapp";
 import { ScrollProgress } from "@/components/layout/scroll-progress";
 import { doctor, siteUrl } from "@/lib/data";
+import { OG_IMAGE } from "@/lib/seo";
 
 const jakarta = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
@@ -44,11 +45,13 @@ export const metadata: Metadata = {
     description: doctor.intro,
     url: siteUrl,
     siteName: doctor.name,
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: `${doctor.name} — ${doctor.title}`,
     description: doctor.intro,
+    images: [OG_IMAGE.url],
   },
   robots: { index: true, follow: true },
 };

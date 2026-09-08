@@ -76,5 +76,3 @@ Depending on the severity, the patients may require supportive care or emergency
 “Sometimes patients require early nerve decompression surgery. In the last few decades, minimally invasive spine surgery (nerve root decompression via endoscope by disc removal) is known to be a safe surgery option that gives faster recovery”, says Dr. Jayesh.
 
 There are lots of myths about spine surgery. The most common one is 'spine surgery may lead to paralysis and loss of independence'. In the era of advanced endoscopic spine surgery, this has become a part of daycare spine surgery. Minimally spine surgery is very safe, effective, and highly recommendable in terms of rapid postoperative clinical outcomes.
-
-![](https://bs.serving-sys.com/Serving/adServer.bs?cn=display&amp;c=19&amp;pli=1079775296&amp;gdpr=0&amp;gdpr_consent=&amp;us_privacy=${US_PRIVACY}&amp;adid=1091887644&amp;ord=2023-12-09+08%3A05%3A43)

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { JsonLd } from "@/components/seo/json-ld";
+import { pageMetadata } from "@/lib/seo";
+import { BreadcrumbJsonLd, JsonLd } from "@/components/seo/json-ld";
 import { Star } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { PageHero } from "@/components/ui/page-hero";
@@ -8,10 +9,11 @@ import { CtaBand } from "@/components/ui/cta-band";
 import { GoogleReviews } from "@/components/testimonials/google-reviews";
 import { googleReviews, doctor } from "@/lib/data";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/testimonials",
   title: "Patient Testimonials",
   description: `Patient reviews for ${doctor.name} — rated ${doctor.rating.toFixed(1)}★ across ${doctor.reviews} Google reviews.`,
-};
+});
 
 export default function TestimonialsPage() {
   const featured = googleReviews[0];
@@ -21,6 +23,12 @@ export default function TestimonialsPage() {
       {/* Template-only route: keeps the generated Physician schema. Migrated pages
           render <StoredJsonLd /> instead — the two are never merged. */}
       <JsonLd />
+      <BreadcrumbJsonLd
+        trail={[
+          { name: "Home", path: "/" },
+          { name: "Testimonials", path: "/testimonials" },
+        ]}
+      />
       <PageHero
         eyebrow="Patient Stories"
         breadcrumb="Testimonials"

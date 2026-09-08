@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { JsonLd } from "@/components/seo/json-ld";
+import { pageMetadata } from "@/lib/seo";
+import { BreadcrumbJsonLd, JsonLd } from "@/components/seo/json-ld";
 import { Clock, MapPin, MessageCircle, Phone, ShieldCheck } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { PageHero } from "@/components/ui/page-hero";
@@ -7,10 +8,11 @@ import { Reveal } from "@/components/ui/reveal";
 import { AppointmentForm } from "@/components/forms/appointment-form";
 import { doctor, locations, trustStats } from "@/lib/data";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/appointment",
   title: "Book an Appointment",
   description: `Book an appointment with ${doctor.name}, ${doctor.title} in Mumbai. Call ${doctor.phone} or request a time online.`,
-};
+});
 
 const steps = [
   { n: "01", title: "Request", desc: "Fill the form or call — tell us briefly about your concern." },
@@ -26,6 +28,12 @@ export default function AppointmentPage() {
       {/* Template-only route: keeps the generated Physician schema. Migrated pages
           render <StoredJsonLd /> instead — the two are never merged. */}
       <JsonLd />
+      <BreadcrumbJsonLd
+        trail={[
+          { name: "Home", path: "/" },
+          { name: "Appointment", path: "/appointment" },
+        ]}
+      />
       <PageHero
         eyebrow="Book an Appointment"
         breadcrumb="Appointment"

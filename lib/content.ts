@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { load as parseYaml } from "js-yaml";
 import { marked } from "marked";
+import { OG_IMAGE } from "@/lib/seo";
 import type { Metadata } from "next";
 
 /**
@@ -328,8 +329,13 @@ export function metadataFromDoc(doc: ContentDoc): Metadata {
   meta.authors = null;
 
   // Built as whole literals so TypeScript can discriminate the og:type / twitter:card
-  // unions. Only keys actually present in the capture are emitted; there is no og:image
-  // on this site (0/203 pages), so none is invented here.
+  // unions. Only TEXT keys present in the capture are emitted — no title, description,
+  // url, site_name or locale is invented.
+  //
+  // `images` is the one addition to the capture. WordPress emitted no og:image on any of
+  // the 203 URLs, so a shared link showed no preview card anywhere; unlike the text keys
+  // there is no indexed value being overwritten, and og:image is not indexed copy. It is
+  // attached to indexable documents only — a noindex archive has no reason to carry one.
   const ogKeys = ["og:title", "og:description", "og:url", "og:site_name", "og:locale"];
   if (ogKeys.some((k) => seo[k]) || seo["og:type"]) {
     const common = {
@@ -338,6 +344,7 @@ export function metadataFromDoc(doc: ContentDoc): Metadata {
       ...(seo["og:url"] ? { url: seo["og:url"] } : {}),
       ...(seo["og:site_name"] ? { siteName: seo["og:site_name"] } : {}),
       ...(seo["og:locale"] ? { locale: seo["og:locale"] } : {}),
+      ...(doc.noindex ? {} : { images: [OG_IMAGE] }),
     };
     meta.openGraph = seo["og:type"] === "article" ? { ...common, type: "article" } : { ...common };
   } else {
@@ -347,6 +354,7 @@ export function metadataFromDoc(doc: ContentDoc): Metadata {
   const twText = {
     ...(seo["twitter:title"] ? { title: seo["twitter:title"] } : {}),
     ...(seo["twitter:description"] ? { description: seo["twitter:description"] } : {}),
+    ...(doc.noindex ? {} : { images: [OG_IMAGE.url] }),
   };
   if (seo["twitter:card"] === "summary_large_image" || seo["twitter:card"] === "summary") {
     meta.twitter = { card: seo["twitter:card"], ...twText };

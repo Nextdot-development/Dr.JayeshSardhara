@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+import { BreadcrumbJsonLd, JsonLd } from "@/components/seo/json-ld";
 import { Clock, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { PageHero } from "@/components/ui/page-hero";
@@ -6,10 +8,11 @@ import { Reveal } from "@/components/ui/reveal";
 import { AppointmentForm } from "@/components/forms/appointment-form";
 import { doctor, locations } from "@/lib/data";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/contact-us",
   title: "Contact",
   description: `Contact ${doctor.name} — clinic locations in Mumbai, phone, email and WhatsApp. OPD ${doctor.opd}.`,
-};
+});
 
 export default function ContactPage() {
   const wa = `https://wa.me/${doctor.whatsapp}?text=${encodeURIComponent("Hello, I'd like to book a consultation.")}`;
@@ -23,6 +26,17 @@ export default function ContactPage() {
 
   return (
     <>
+      {/* This route has no WordPress capture behind it, so there is no StoredJsonLd to
+          render and it was shipping with no structured data at all. The Physician entity
+          is the right one here: every property it claims — name, phone, email, the two
+          clinic addresses — is visibly rendered on this page. */}
+      <JsonLd />
+      <BreadcrumbJsonLd
+        trail={[
+          { name: "Home", path: "/" },
+          { name: "Contact", path: "/contact-us" },
+        ]}
+      />
       <PageHero
         eyebrow="Get in Touch"
         breadcrumb="Contact"
