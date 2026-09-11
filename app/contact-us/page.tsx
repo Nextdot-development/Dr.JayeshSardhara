@@ -91,16 +91,6 @@ export default function ContactPage() {
                 </div>
               ))}
             </div>
-
-            <div className="mt-8 overflow-hidden border border-navy-900/10 dark:border-white/10">
-              <iframe
-                title="Clinic location map"
-                src="https://www.google.com/maps?q=Fortis+Hospital+Mulund+Mumbai&output=embed"
-                className="h-64 w-full grayscale-[0.2]"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-            </div>
           </div>
 
           {/* form */}

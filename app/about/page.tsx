@@ -9,7 +9,8 @@ import { DoctorPhoto } from "@/components/ui/doctor-photo";
 import { Reveal } from "@/components/ui/reveal";
 import { Button } from "@/components/ui/button";
 import { CtaBand } from "@/components/ui/cta-band";
-import { doctor, affiliations, awards, expertise, SURGERIES_TOTAL } from "@/lib/data";
+import { VideoEmbed } from "@/components/ui/video-embed";
+import { doctor, affiliations, aboutVideo, awards, expertise, SURGERIES_TOTAL } from "@/lib/data";
 
 const doc = getDocByFileSlug("about")!;
 
@@ -127,9 +128,15 @@ export default function AboutPage() {
             <h3 className="mt-12 text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-teal-700 dark:text-teal-300">
               Training &amp; Career Milestones
             </h3>
+            {/* Rows stack below `sm`. At base the fixed 4.5rem year column plus gap-x-6
+                ate 96px of the 280px available at 320px, leaving 184px for the title and
+                description. The Honours list further down this same page already uses
+                `sm:grid-cols-[5rem_1fr_auto]` for exactly this reason; this row was the
+                one that did not. Desktop is unchanged — the two-column layout still
+                applies from 640px up. */}
             <div className="mt-6 border-t border-navy-900/12 dark:border-white/12">
               {timeline.map((t) => (
-                <div key={t.title} className="grid grid-cols-[4.5rem_1fr] gap-x-6 border-b border-navy-900/12 py-5 dark:border-white/12">
+                <div key={t.title} className="grid gap-x-6 border-b border-navy-900/12 py-5 dark:border-white/12 sm:grid-cols-[4.5rem_1fr]">
                   <span className="font-display text-sm font-medium tabular-nums text-teal-700/70 dark:text-teal-300/70">{t.year}</span>
                   <div>
                     <h4 className="font-display text-lg font-medium text-navy-900 dark:text-white">{t.title}</h4>
@@ -243,21 +250,50 @@ export default function AboutPage() {
         </Container>
       </section>
 
-      {/* Certificates — migrated from the live /about/ page. */}
+      {/* Introduction video and the migrated certificate, paired in one row.
+          The video is 16:9 and the certificate is portrait, so side by side they fill the
+          band that the video alone left half empty on wide screens. Both columns keep
+          their own eyebrow + heading, so each is still a titled subsection rather than one
+          heading spanning two unrelated things.
+
+          `aria-label` on each column rather than `aria-labelledby`: SectionHeading renders
+          the <h2> and takes no `id`, and it is shared by every page on the site — labelling
+          here avoids reaching into a component this change has no business touching. */}
       <section className="border-t border-border py-20 lg:py-24">
         <Container>
-          <SectionHeading eyebrow="Certificates" title="Credentials on record" />
-          <Reveal className="mt-10 max-w-xs">
-            <div className="relative aspect-[212/300] overflow-hidden border border-navy-900/10 bg-surface-2 dark:border-white/10">
-              <Image
-                src="/wp-content/uploads/2024/02/DOC-20240220-WA0052_240220_202124.jpg"
-                alt={`Certificate awarded to ${doctor.name}`}
-                fill
-                sizes="20rem"
-                className="object-contain"
-              />
-            </div>
-          </Reveal>
+          <div className="grid items-start gap-14 lg:grid-cols-12 lg:gap-16">
+            <section aria-label="About Jayesh Sardhara" className="lg:col-span-7">
+              <SectionHeading eyebrow="Video" title="About Jayesh Sardhara" />
+              {/* VideoEmbed handles the rest: real poster from YouTube's thumbnail CDN,
+                  centred play button, and the iframe is only mounted on click. */}
+              <Reveal className="mt-10">
+                <VideoEmbed video={aboutVideo} />
+              </Reveal>
+            </section>
+
+            <section aria-label="Certificates" className="lg:col-span-5">
+              <SectionHeading eyebrow="Certificates" title="Credentials on record" />
+              {/* Capped at 22rem so the portrait scan lands at roughly the video's height
+                  instead of towering over it.
+
+                  `sizes` MUST track that cap. The source is 2480x3509, but with a `sizes`
+                  hint next/image picks the srcset candidate from the rendered width — the
+                  old `20rem` was written for the 20rem box this used to sit in, and leaving
+                  it here would have the browser fetch a narrower file than the box it now
+                  fills and upscale it. This is the one line that keeps the scan sharp. */}
+              <Reveal className="mt-10 max-w-[22rem]">
+                <div className="relative aspect-[212/300] overflow-hidden border border-navy-900/10 bg-surface-2 dark:border-white/10">
+                  <Image
+                    src="/wp-content/uploads/2024/02/DOC-20240220-WA0052_240220_202124.jpg"
+                    alt={`Certificate awarded to ${doctor.name}`}
+                    fill
+                    sizes="(min-width: 1024px) 22rem, (min-width: 640px) 20rem, 90vw"
+                    className="object-contain"
+                  />
+                </div>
+              </Reveal>
+            </section>
+          </div>
         </Container>
       </section>
 

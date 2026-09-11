@@ -602,6 +602,19 @@ export const homeInlineVideos: Record<"whyChoose" | "fortis", VideoItem> = {
   },
 };
 
+/**
+ * The introduction video on /about/, above the certificates section.
+ *
+ * Same YouTube ID as `homeInlineVideos.whyChoose`, declared separately rather than
+ * imported from it: the two are independent placements, and pointing /about/ at the
+ * homepage's entry would mean swapping the homepage video silently swapped this one too.
+ */
+export const aboutVideo: VideoItem = {
+  id: "jC20REdQTX8",
+  platform: "youtube",
+  title: "Witness The Remarkable Journey of Dr. Jayesh Sardhara",
+};
+
 /** Section 7 — "Why Choose Dr. Jayesh Sardhara?" */
 export const whyChooseSardhara = [
   {

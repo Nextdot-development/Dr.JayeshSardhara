@@ -29,7 +29,7 @@ export function AppointmentForm() {
 
   if (state === "done") {
     return (
-      <div className="flex flex-col items-center justify-center gap-4 rounded-3xl border border-teal-200 bg-teal-500/5 p-10 text-center">
+      <div className="flex flex-col items-center justify-center gap-4 rounded-3xl border border-teal-200 bg-teal-500/5 p-6 text-center sm:p-10">
         <CheckCircle2 className="h-14 w-14 text-teal-500" />
         <h3 className="text-xl font-semibold text-navy-900 dark:text-white">Request received</h3>
         <p className="max-w-sm text-sm text-muted">

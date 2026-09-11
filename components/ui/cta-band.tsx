@@ -10,7 +10,7 @@ export function CtaBand() {
     <section className="py-20 lg:py-24">
       <Container>
         <Reveal className="overflow-hidden rounded-2xl border-t-2 border-teal-500 bg-navy-900 text-white dark:bg-navy-950">
-          <div className="grid items-center gap-10 p-10 sm:p-14 lg:grid-cols-[1.5fr_1fr]">
+          <div className="grid items-center gap-10 p-6 sm:p-14 lg:grid-cols-[1.5fr_1fr]">
             <div>
               <span className="flex items-center gap-3 text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-teal-300">
                 <span className="h-px w-8 bg-teal-400/60" /> Appointments

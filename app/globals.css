@@ -170,6 +170,12 @@ body {
   color: var(--muted);
   font-size: 1.075rem;
   line-height: 1.8;
+  /* The body is migrated WordPress markdown rendered through dangerouslySetInnerHTML, so
+     the token lengths are not controlled here. Nothing in the current 197 documents is
+     long enough to overflow (checked), but a pasted URL or a long drug/procedure name in
+     a future edit would push the 320px column sideways with no way to scroll it back.
+     Normal prose is unaffected — this only engages on a word that cannot otherwise fit. */
+  overflow-wrap: break-word;
 }
 .article > * + * { margin-top: 1.35rem; }
 .article p { max-width: 42rem; }

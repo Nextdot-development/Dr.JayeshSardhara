@@ -105,7 +105,15 @@ export function Navbar() {
             transition={{ duration: 0.25 }}
             className="overflow-hidden border-t border-border bg-background lg:hidden"
           >
-            <Container className="flex flex-col gap-1 py-4">
+            {/* The panel lives inside a `fixed` header, so anything taller than the
+                viewport is simply unreachable — the page behind it scrolls, this does not.
+                Its natural height is ~700px (7 top-level links, 7 sub-links, the CTA), which
+                overflows a 320x568 or 360x640 screen by 140-220px and swallows the
+                "Book Appointment" button. Capping it against the dynamic viewport height
+                and letting it scroll fixes that; `overscroll-contain` stops the scroll
+                chaining to the page behind once the list bottoms out. Mobile-only: the whole
+                panel is `lg:hidden`, so no desktop breakpoint is touched. */}
+            <Container className="flex max-h-[calc(100dvh-5rem)] flex-col gap-1 overflow-y-auto overscroll-contain py-4">
               {nav.map((it) => (
                 <div key={it.label}>
                   <Link

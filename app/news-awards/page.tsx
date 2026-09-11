@@ -9,18 +9,11 @@ import Image from "next/image";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { VideoEmbed } from "@/components/ui/video-embed";
 import { AwardsGallery } from "@/components/awards-gallery";
-import { awards, doctor, pressCoverage, newsItems, videos } from "@/lib/data";
+import { doctor, pressCoverage, newsItems, videos } from "@/lib/data";
 
 const doc = getDocByFileSlug("news-awards")!;
 
 export const metadata: Metadata = metadataFromDoc(doc);
-
-const metrics = [
-  { value: `${doctor.publications}`, label: "Research Publications" },
-  { value: `0${doctor.books}`, label: "Books Authored" },
-  { value: `0${doctor.patents}`, label: "Patent Held" },
-  { value: "04+", label: "Major Awards" },
-];
 
 export default function AwardsPage() {
   return (
@@ -33,85 +26,18 @@ export default function AwardsPage() {
         description="A career shaped by national awards, gold medals, research honours and leadership within India's neurosurgical community."
       />
 
-      {/* metrics strip */}
-      <section className="border-b border-border">
-        <Container>
-          <dl className="grid grid-cols-2 sm:grid-cols-4">
-            {metrics.map((m, i) => (
-              <div
-                key={m.label}
-                className={`py-10 ${i !== 0 ? "sm:border-l sm:border-border sm:pl-8" : ""} ${i % 2 !== 0 ? "border-l border-border pl-8" : ""} ${i >= 2 ? "border-t border-border sm:border-t-0" : ""}`}
-              >
-                <dt className="font-display text-4xl font-medium text-navy-900 dark:text-white">{m.value}</dt>
-                <dd className="mt-2 text-xs uppercase tracking-wider text-muted">{m.label}</dd>
-              </div>
-            ))}
-          </dl>
-        </Container>
-      </section>
-
-      {/* timeline */}
-      <section className="py-20 lg:py-28">
-        <Container className="grid gap-12 lg:grid-cols-12 lg:gap-16">
-          <div className="lg:col-span-4">
-            <div className="lg:sticky lg:top-28">
-              <span className="flex items-center gap-3 text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-teal-700 dark:text-teal-300">
-                <span className="h-px w-8 bg-teal-600/50" /> Honours & Milestones
-              </span>
-              <h2 className="mt-5 font-display text-[2rem] font-medium leading-tight text-navy-900 dark:text-white">
-                A decade of surgical &amp; academic achievement.
-              </h2>
-            </div>
-          </div>
-
-          <div className="lg:col-span-8">
-            <div className="border-t border-navy-900/12 dark:border-white/12">
-              {awards.map((a, i) => (
-                <Reveal key={a.title} delay={(i % 6) * 0.05}>
-                  <div className="grid grid-cols-1 gap-x-8 gap-y-1 border-b border-navy-900/12 py-7 dark:border-white/12 sm:grid-cols-[6rem_1fr]">
-                    <span className="font-display text-lg font-medium tabular-nums text-teal-700/70 dark:text-teal-300/70">
-                      {a.year}
-                    </span>
-                    <div>
-                      <h3 className="font-display text-lg font-medium text-navy-900 dark:text-white">{a.title}</h3>
-                      <p className="mt-1 text-sm text-muted">
-                        <span className="uppercase tracking-wider text-teal-700/80 dark:text-teal-300/80">{a.type}</span>
-                        <span className="mx-2 text-navy-300 dark:text-white/30">·</span>
-                        {a.org}
-                      </p>
-                    </div>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </Container>
-      </section>
-
-      {/* leadership band */}
-      <section className="pb-8">
-        <Container>
-          <Reveal className="overflow-hidden rounded-2xl border-t-2 border-teal-500 bg-navy-900 p-10 text-white sm:p-14 dark:bg-navy-950">
-            <div className="grid gap-8 lg:grid-cols-[1fr_1.3fr] lg:items-center lg:gap-16">
-              <h3 className="font-display text-2xl font-medium leading-tight sm:text-3xl">
-                Chairman &amp; national leadership
-              </h3>
-              <p className="text-white/75">
-                Beyond individual awards, {doctor.shortName} serves as Chairman of the Young Neurosurgical Forum and the
-                Innovation &amp; Patent Cell at the Neurological Society of India — mentoring the next generation of
-                neurosurgeons and driving research and innovation across the field.
-              </p>
-            </div>
-          </Reveal>
-        </Container>
-      </section>
-
-
       {/* Award photographs — the Elementor image carousel that used to sit on the
           homepage (live WordPress section 5). Relocated here on 2026-09-04: it was
           the third awards touchpoint on `/`, and this is the awards page. Same
-          images, unchanged. See _migration/PAGE-REBUILD.md §6. */}
-      <AwardsGallery />
+          images, unchanged. See _migration/PAGE-REBUILD.md §6.
+
+          The default `pb-16 lg:pb-20` carries no TOP padding: the gallery used to sit
+          under the leadership band, which supplied the gap. With the metrics strip,
+          the honours timeline and that band removed, the gallery now follows the hero
+          directly and its eyebrow would butt straight against the hero's bottom border,
+          so the same value is applied on both sides. Images, order and captions are
+          untouched. */}
+      <AwardsGallery className="py-16 lg:py-20" />
 
       {/* ── News ──────────────────────────────────────────────────────────────
           Migrated from the live /news-awards/ page. The template had no press
