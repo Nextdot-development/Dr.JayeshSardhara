@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { ArrowLeft, ArrowRight, ArrowUpRight, CalendarDays, Clock } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
@@ -19,20 +19,55 @@ import {
   stripLeadingH1,
   toPostSummary,
 } from "@/lib/content";
+import { CmsArticle } from "@/components/blog/cms-article";
+import {
+  getCmsPostForRoute,
+  getCmsRedirectTarget,
+  getCmsSlugs,
+  getRelatedFor,
+} from "@/lib/cms/public";
+import { cmsMetadata } from "@/lib/cms/metadata";
+import { cmsPostJsonLd } from "@/lib/cms/jsonld";
+import { canonicalUrl } from "@/lib/seo";
 
 /**
- * Root-level migrated content.
+ * Root-level content: the 197 migrated WordPress documents, plus every post written
+ * in the CMS since.
  *
  * WordPress served every blog post at `/{slug}/`, so posts stay at the root rather than
  * moving under `/blog/` — see _migration/url-map-notes.md Q1. Static segments take
  * precedence over this dynamic one, so `/about`, `/blog` etc. still resolve to their own
  * hand-built routes.
+ *
+ * A slug the migrated markdown owns is served from markdown, always — `getCmsPostForRoute()`
+ * refuses to return a CMS row for one. Those URLs are indexed and carry backlinks; a new
+ * post must not be able to take one over.
  */
 
-export const dynamicParams = false;
+/**
+ * `true`, where the migrated-only version of this route had `false`.
+ *
+ * A post scheduled for next Tuesday is not in `generateStaticParams()` at build time,
+ * so with `false` it would 404 on the day it goes live. With `true` its slug is rendered
+ * on first request instead. Unknown slugs still 404 for real: the body below calls
+ * `notFound()` when neither source has the slug, which emits a 404 status — not a soft
+ * 200 with an empty page.
+ */
+export const dynamicParams = true;
 
-export function generateStaticParams() {
-  return getDynamicRootDocs().map((d) => ({ slug: d.fileSlug }));
+/**
+ * Regenerated at most once a minute. This is the mechanism by which a scheduled post
+ * appears without any row changing — see lib/cms/visibility.ts.
+ */
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  const migrated = getDynamicRootDocs().map((d) => ({ slug: d.fileSlug }));
+  // Prerender the posts that are already live. Anything scheduled for later is picked
+  // up on demand once `dynamicParams` lets the request through.
+  const cms = (await getCmsSlugs()).map((slug) => ({ slug }));
+  const seen = new Set(migrated.map((m) => m.slug));
+  return [...migrated, ...cms.filter((c) => !seen.has(c.slug))];
 }
 
 export async function generateMetadata({
@@ -41,15 +76,42 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
+
   const doc = getDocByFileSlug(slug);
-  if (!doc) return {};
-  return metadataFromDoc(doc);
+  if (doc) return metadataFromDoc(doc);
+
+  const post = await getCmsPostForRoute(slug);
+  return post ? cmsMetadata(post) : {};
 }
 
 export default async function MigratedPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const doc = getDocByFileSlug(slug);
-  if (!doc || doc.postType === "post_tag") notFound();
+
+  // ---- CMS posts ----
+  // Reached only when no migrated document claims the slug, so markdown always wins.
+  if (!doc) {
+    const post = await getCmsPostForRoute(slug);
+    if (!post) {
+      // Before giving up: this may be a slug a post has since moved away from.
+      const movedTo = await getCmsRedirectTarget(slug);
+      if (movedTo) permanentRedirect(`/${movedTo}/`);
+      notFound();
+    }
+
+    const canonical = post.canonical_url || canonicalUrl(`/${post.slug}/`);
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: cmsPostJsonLd(post, canonical) }}
+        />
+        <CmsArticle post={post} related={await getRelatedFor(post)} />
+      </>
+    );
+  }
+
+  if (doc.postType === "post_tag") notFound();
 
   // <PageHero> / the article header already render the <h1> — see stripLeadingH1.
   const html = renderMarkdown(stripLeadingH1(doc.body));

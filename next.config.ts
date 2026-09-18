@@ -1,10 +1,33 @@
 import type { NextConfig } from "next";
 import path from "node:path";
 
+/**
+ * Supabase Storage host for CMS featured images.
+ *
+ * Derived from the configured project URL rather than hardcoded, so a different
+ * project (staging, a fresh clone) needs no edit here. With no URL configured the
+ * list stays empty — `next/image` then only accepts the local paths the migrated
+ * posts use, which is the correct behaviour when the CMS is off.
+ */
+function supabaseImagePatterns(): NonNullable<NextConfig["images"]>["remotePatterns"] {
+  const raw = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (!raw) return [];
+  try {
+    const { hostname } = new URL(raw);
+    return [{ protocol: "https", hostname, pathname: "/storage/v1/object/public/**" }];
+  } catch {
+    return [];
+  }
+}
+
 const nextConfig: NextConfig = {
   // Pin the workspace root so Next doesn't pick up an unrelated parent lockfile.
   turbopack: {
     root: path.resolve(),
+  },
+
+  images: {
+    remotePatterns: supabaseImagePatterns(),
   },
 
   // WordPress served every URL with a trailing slash and the sitemap/canonicals still

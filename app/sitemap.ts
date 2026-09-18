@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { siteUrl } from "@/lib/data";
 import { getAllDocs } from "@/lib/content";
+import { getCmsSitemapEntries } from "@/lib/cms/public";
 
 /**
  * Emits the indexable `action=keep` URLs from _migration/url-map.csv: all 197 keep rows
@@ -46,7 +47,13 @@ const TEMPLATE_ONLY_PUBLISHED = new Date("2026-09-04");
 const CONTACT_ROUTE = "/contact-us/";
 const CONTACT_MODIFIED = new Date("2025-09-06T13:10:55+05:30");
 
-export default function sitemap(): MetadataRoute.Sitemap {
+/**
+ * Refreshed on the same cadence as the listing, so a post that becomes due is in
+ * the sitemap within a minute of going live.
+ */
+export const revalidate = 60;
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const migrated = getAllDocs()
     .filter((doc) => !doc.noindex)
     .sort((a, b) => a.slug.localeCompare(b.slug))
@@ -60,8 +67,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: TEMPLATE_ONLY_PUBLISHED,
   }));
 
+  /**
+   * CMS posts, from the SAME visibility function the listing and the article route
+   * use — so a draft, an archived post or one scheduled for next week cannot appear
+   * here. `getCmsSitemapEntries()` has already dropped any slug the migrated content
+   * owns, so nothing is listed twice.
+   */
+  const cms = (await getCmsSitemapEntries()).map((entry) => ({
+    url: `${siteUrl}${entry.url}`,
+    lastModified: entry.lastModified,
+  }));
+
   return [
     ...migrated,
+    ...cms,
     ...templateOnly,
     { url: `${siteUrl}${CONTACT_ROUTE}`, lastModified: CONTACT_MODIFIED },
   ];

@@ -22,6 +22,12 @@ const doc = getDocByFileSlug("index")!;
 
 export const metadata: Metadata = metadataFromDoc(doc);
 
+/**
+ * Regenerated on the same cadence as /blog/, because <Resources> below renders the three
+ * newest articles from both sources — including CMS posts, which change without a build.
+ */
+export const revalidate = 60;
+
 export default function HomePage() {
   return (
     <>

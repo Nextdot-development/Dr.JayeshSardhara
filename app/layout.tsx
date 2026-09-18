@@ -6,6 +6,7 @@ import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { FloatingWhatsApp } from "@/components/layout/floating-whatsapp";
 import { ScrollProgress } from "@/components/layout/scroll-progress";
+import { SiteChrome } from "@/components/layout/site-chrome";
 import { doctor, siteUrl } from "@/lib/data";
 import { OG_IMAGE } from "@/lib/seo";
 
@@ -72,19 +73,33 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             the site now ships. The provider itself stays so the `dark:` variants
             throughout the components remain valid and this is a one-line revert. */}
         <ThemeProvider attribute="class" forcedTheme="light" disableTransitionOnChange>
-          <ScrollProgress />
-          <a
-            href="#main"
-            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-lg focus:bg-navy-900 focus:px-4 focus:py-2 focus:text-white"
+          {/* <SiteChrome> renders the public shell everywhere EXCEPT /admin, which is a
+              dashboard and has no business carrying a patient-facing navbar, footer or
+              WhatsApp button. Public routes are unaffected — see components/layout/site-chrome.tsx. */}
+          <SiteChrome
+            chrome={{
+              top: (
+                <>
+                  <ScrollProgress />
+                  <a
+                    href="#main"
+                    className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-lg focus:bg-navy-900 focus:px-4 focus:py-2 focus:text-white"
+                  >
+                    Skip to content
+                  </a>
+                  <Navbar />
+                </>
+              ),
+              bottom: (
+                <>
+                  <Footer />
+                  <FloatingWhatsApp />
+                </>
+              ),
+            }}
           >
-            Skip to content
-          </a>
-          <Navbar />
-          <main id="main" className="flex-1">
             {children}
-          </main>
-          <Footer />
-          <FloatingWhatsApp />
+          </SiteChrome>
         </ThemeProvider>
       </body>
     </html>

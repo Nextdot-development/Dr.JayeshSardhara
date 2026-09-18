@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { PostsExplorer } from "@/components/blog/posts-explorer";
-import { getPostSummaries } from "@/lib/content";
+import { getMergedPostSummaries } from "@/lib/cms/public";
 
 /**
  * Kept, not cut, in the 2026-09-04 density pass. The section chrome is template-authored,
@@ -11,9 +11,13 @@ import { getPostSummaries } from "@/lib/content";
  * on the homepage that links straight into indexed post URLs, which "Blog" in the nav does
  * not replace. Compressed instead: the category-filter and search row that PostsExplorer
  * draws for /blog/ is suppressed here, since the teaser always shows a fixed three.
+ *
+ * Reads the MERGED list, like /blog/ does. Reading only the markdown would leave the
+ * homepage showing three older articles while the newest post sat above them on the
+ * blog — the one page a first-time visitor sees, contradicting the one they click into.
  */
-export function Resources() {
-  const posts = getPostSummaries();
+export async function Resources() {
+  const posts = await getMergedPostSummaries();
   return (
     <section className="border-y border-border bg-surface/50 py-16 lg:py-20" id="resources">
       <Container>

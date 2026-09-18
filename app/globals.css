@@ -237,6 +237,38 @@ body {
   white-space: nowrap;
 }
 
+/* ---------- Block types only CMS posts emit ----------
+   Migrated markdown never produced a figure, a code fence or an <hr>, so these rules
+   exist for lib/cms/blocks.ts output. They sit inside `.article` so both sources still
+   render through one set of prose styles. */
+.article .table-scroll { overflow-x: auto; }
+.article figure { margin-inline: 0; }
+.article figcaption {
+  margin-top: 0.6rem;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+.article hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin-block: 2.4rem;
+}
+.article pre {
+  overflow-x: auto;
+  padding: 1.1rem 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.article :not(pre) > code {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  padding: 0.1em 0.35em;
+  font-size: 0.9em;
+}
+
 /* Custom scrollbar — single calm blue */
 ::-webkit-scrollbar { width: 11px; height: 11px; }
 ::-webkit-scrollbar-track { background: transparent; }

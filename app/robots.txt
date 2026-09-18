@@ -13,4 +13,10 @@
 User-Agent: *
 Allow: /
 
+# The CMS dashboard. Behind a login and marked noindex in app/admin/layout.tsx, so a
+# Disallow is belt-and-braces rather than the only defence — but there is no reason to
+# spend crawl budget on a page that always redirects an anonymous visitor to a login.
+Disallow: /admin
+Disallow: /api/
+
 Sitemap: https://drjayeshsardhara.com/sitemap.xml
