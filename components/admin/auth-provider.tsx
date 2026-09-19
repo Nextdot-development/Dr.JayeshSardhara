@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import type { Session } from "@supabase/supabase-js";
 import { SUPABASE_CONFIGURED, supabaseBrowser } from "@/lib/supabase/client";
+import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from "@/lib/supabase/config";
 
 /**
  * Session state for the dashboard, plus the redirect that keeps signed-out visitors
@@ -88,18 +89,66 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-/** Shown when the project has no Supabase credentials, instead of a broken login. */
+/**
+ * Shown when the project has no Supabase credentials, instead of a broken login.
+ *
+ * It reports WHICH value is missing, and covers hosted deployments as well as local
+ * development. The first version of this notice talked only about `.env.local` and
+ * restarting the dev server, which is no help at all to someone looking at it on a
+ * production URL — and it did not say which of the two names had not been found, which
+ * is the one fact that actually resolves the problem.
+ */
 function SetupNotice() {
+  const missing = [
+    { name: "NEXT_PUBLIC_SUPABASE_URL", present: Boolean(SUPABASE_URL) },
+    {
+      name: "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+      alt: "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+      present: Boolean(SUPABASE_PUBLISHABLE_KEY),
+    },
+  ];
+
   return (
     <div className="mx-auto flex min-h-screen max-w-xl flex-col justify-center gap-4 px-6 py-20">
       <h1 className="font-display text-2xl font-medium text-navy-900">CMS not configured</h1>
+
+      <ul className="flex flex-col gap-1.5 text-sm">
+        {missing.map((item) => (
+          <li key={item.name} className="flex items-baseline gap-2">
+            <span className={item.present ? "text-emerald-600" : "text-red-600"}>
+              {item.present ? "✓" : "✗"}
+            </span>
+            <span>
+              <code className="text-navy-900">{item.name}</code>
+              {item.alt && (
+                <>
+                  {" "}
+                  <span className="text-muted">
+                    (or <code>{item.alt}</code>)
+                  </span>
+                </>
+              )}
+              <span className={item.present ? "text-muted" : "text-red-700"}>
+                {item.present ? " — found" : " — not found"}
+              </span>
+            </span>
+          </li>
+        ))}
+      </ul>
+
       <p className="text-sm leading-relaxed text-muted">
-        The dashboard needs <code>NEXT_PUBLIC_SUPABASE_URL</code> and{" "}
-        <code>NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY</code> in <code>.env.local</code>. Copy{" "}
-        <code>.env.example</code>, fill both in from your Supabase project&rsquo;s API settings, run{" "}
-        <code>supabase/migrations/0001_blog_cms.sql</code> in the SQL editor, then restart the dev
-        server.
+        Set the missing value in your host&rsquo;s environment variables (on Vercel: Project →
+        Settings → Environment Variables, for <em>Production</em>), or in <code>.env.local</code>{" "}
+        when running locally. Both come from the Supabase dashboard under Project Settings → API
+        Keys.
       </p>
+
+      <p className="text-sm leading-relaxed text-muted">
+        <strong>A redeploy is required.</strong> <code>NEXT_PUBLIC_</code> values are compiled into
+        the JavaScript at build time, so adding one to an existing deployment changes nothing until
+        the site is built again.
+      </p>
+
       <p className="text-sm text-muted">
         The public site is unaffected — it serves the migrated markdown posts with or without these.
       </p>

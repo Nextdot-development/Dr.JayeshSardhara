@@ -114,6 +114,12 @@ TEST_ADMIN_PASSWORD=…
 
 `.env.example` in the project root lists the rest (all optional, all generated locally).
 
+**Deploying to Vercel (or any host):** put the same two values in the host's environment
+variables, scoped to **Production**, and then **redeploy**. `NEXT_PUBLIC_` values are
+compiled into the JavaScript when the site is built, so adding one to a deployment that
+already exists changes nothing until it is rebuilt. If `/admin` still says "CMS not
+configured" afterwards, it will name the exact variable it could not find.
+
 ---
 
 ## 7. Optional — better AI wording in the SEO helper

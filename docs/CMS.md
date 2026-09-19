@@ -63,7 +63,7 @@ Copy `.env.example` to `.env.local` and fill in:
 | Variable | Where it comes from | Secret? |
 | --- | --- | --- |
 | `NEXT_PUBLIC_SUPABASE_URL` | Project Settings → API → Project URL | no |
-| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | same page — `sb_publishable_…`, or the legacy "anon public" JWT | no |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | same page — `sb_publishable_…`, or the legacy "anon public" JWT. `NEXT_PUBLIC_SUPABASE_ANON_KEY` is accepted as an alias. | no |
 | `NEXT_PUBLIC_SITE_URL` | `https://drjayeshsardhara.com` | no |
 | `CMS_ENABLED` | `true`, or `false` to roll the whole CMS back | no |
 | `REVALIDATE_SECRET` | `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"` | **yes** |
@@ -77,6 +77,16 @@ browser-served file.
 
 With no credentials at all the site still builds and runs; it just serves the 180
 migrated posts, exactly as it did before the CMS existed.
+
+### Deploying
+
+`NEXT_PUBLIC_*` values are compiled into the JavaScript **at build time**, not read at
+run time. Adding or changing one on the host does nothing to a deployment that already
+exists — the site has to be built again. On Vercel: Project → Settings → Environment
+Variables (scope it to **Production**), then Deployments → ⋯ → **Redeploy**.
+
+`/admin` names whichever value it cannot find, so the page itself tells you which one to
+fix.
 
 ---
 

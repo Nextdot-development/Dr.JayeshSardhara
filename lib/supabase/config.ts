@@ -9,7 +9,24 @@
  */
 
 export const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
-export const SUPABASE_PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
+
+/**
+ * The public key, under either of the two names it is known by.
+ *
+ * Supabase renamed this concept: what the dashboard now calls the **publishable** key
+ * (`sb_publishable_…`) was the **anon** key, and the overwhelming majority of existing
+ * projects, tutorials and deploy configs still use `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+ * They are the same value, so both names are accepted rather than making a correctly
+ * configured host fail because it picked the other spelling.
+ *
+ * Both are written as literal `process.env.X` member expressions on purpose: that is
+ * the only form Next.js statically replaces at build time. A computed lookup such as
+ * `process.env[name]` is NOT inlined and would read as `undefined` in the browser.
+ */
+export const SUPABASE_PUBLISHABLE_KEY =
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+  "";
 
 /**
  * Whether the CMS is wired up at all.
