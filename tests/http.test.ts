@@ -10,6 +10,13 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
  *   npm run build && npm start        # in one terminal
  *   npm run test:http                 # in another
  *
+ * If port 3000 is taken by another project, start this one elsewhere and say so —
+ * every test that talks to the site first checks that the site answering is this one,
+ * and fails with instructions rather than asserting against a stranger:
+ *
+ *   npx next start -p 3100
+ *   BASE_URL=http://localhost:3100 npm run test:http
+ *
  * Environment:
  *   BASE_URL              default http://localhost:3000
  *   TEST_ADMIN_EMAIL      a Supabase user that can write `blogs`
@@ -53,6 +60,84 @@ async function get(pathname: string): Promise<Fetched> {
 }
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/* ── who is actually answering? ─────────────────────────────────────────────── */
+
+/**
+ * Confirm `BASE` really is THIS site before asserting anything about it.
+ *
+ * Learned the hard way. A `next start` that loses the port to another project on the
+ * same machine exits quietly, and every request then goes to whatever else is
+ * listening. The replies look plausible — another Next app also serves HTML, also has
+ * a login form, also returns 200 — so the suite either fails for reasons that make no
+ * sense, or, for a test that only checks a status code, passes against an entirely
+ * different application.
+ *
+ * Three states, three distinct outcomes, none of which can be mistaken for another:
+ *
+ *   - nothing listening        → skip, saying so
+ *   - something else listening → FAIL loudly, naming the likely cause and the fix
+ *   - this site                → run the test
+ */
+type Target =
+  | { ok: true }
+  | { ok: false; skip: boolean; why: string };
+
+let identified: Target | null = null;
+
+async function identifyTarget(): Promise<Target> {
+  if (identified) return identified;
+
+  let home: Fetched;
+  try {
+    home = await get("/");
+  } catch {
+    identified = { ok: false, skip: true, why: `nothing is listening at ${BASE}` };
+    return identified;
+  }
+
+  // Two markers this site has that another app would not: the practice's name on the
+  // homepage, and this domain's sitemap line in robots.txt.
+  const robots = await get("/robots.txt");
+  const isThisSite =
+    home.status === 200 &&
+    /Jayesh Sardhara/i.test(home.body) &&
+    robots.body.includes("drjayeshsardhara.com/sitemap.xml");
+
+  identified = isThisSite
+    ? { ok: true }
+    : {
+        ok: false,
+        skip: false,
+        why:
+          `${BASE} answered, but it is NOT this site.
+
+` +
+          `Another application is probably holding that port. Start this one on a free ` +
+          `port and point the suite at it:
+
+` +
+          `  npx next start -p 3100
+` +
+          `  BASE_URL=http://localhost:3100 npm run test:http
+`,
+      };
+  return identified;
+}
+
+/**
+ * Call first in any test that talks to the site. Returns false when the test should
+ * stop — either because it skipped, or because it has already been failed.
+ */
+async function requireSite(t: { skip: (why?: string) => void }): Promise<boolean> {
+  const target = await identifyTarget();
+  if (target.ok) return true;
+  if (target.skip) {
+    t.skip(target.why);
+    return false;
+  }
+  assert.fail(target.why);
+}
 
 /* ── seeding ────────────────────────────────────────────────────────────────── */
 
@@ -124,13 +209,8 @@ describe("no secret is served to the browser (acceptance 6)", () => {
   });
 
   it("serves no secret in the HTML of a public page either", async (t) => {
-    let page: Fetched;
-    try {
-      page = await get("/blog/");
-    } catch {
-      t.skip(`no server reachable at ${BASE}`);
-      return;
-    }
+    if (!(await requireSite(t))) return;
+    const page = await get("/blog/");
     assert.equal(/sb_secret_|service_role|REVALIDATE_SECRET|sk-ant-/.test(page.body), false);
   });
 });
@@ -139,13 +219,8 @@ describe("no secret is served to the browser (acceptance 6)", () => {
 
 describe("resilience and routing", () => {
   it("renders the blog listing (acceptance 5: no 500 when the CMS is unavailable)", async (t) => {
-    let page: Fetched;
-    try {
-      page = await get("/blog/");
-    } catch {
-      t.skip(`no server reachable at ${BASE}`);
-      return;
-    }
+    if (!(await requireSite(t))) return;
+    const page = await get("/blog/");
     assert.equal(page.status, 200);
     // The 180 migrated posts are always there, CMS or no CMS.
     assert.ok(page.body.includes("Insights for brain"), "listing did not render its heading");
@@ -153,13 +228,8 @@ describe("resilience and routing", () => {
   });
 
   it("serves a migrated article", async (t) => {
-    let page: Fetched;
-    try {
-      page = await get("/bulging-disc-vs-herniated-disc/");
-    } catch {
-      t.skip(`no server reachable at ${BASE}`);
-      return;
-    }
+    if (!(await requireSite(t))) return;
+    const page = await get("/bulging-disc-vs-herniated-disc/");
     assert.equal(page.status, 200);
     assert.ok(page.body.includes("Bulging Disc"));
   });
@@ -174,13 +244,8 @@ describe("resilience and routing", () => {
    */
   it("still serves the migrated root PAGES, not just the posts", async (t) => {
     const pages = ["brain-tumor", "fellowship", "surgeries", "thank-you"];
-    let first: Fetched;
-    try {
-      first = await get(`/${pages[0]}/`);
-    } catch {
-      t.skip(`no server reachable at ${BASE}`);
-      return;
-    }
+    if (!(await requireSite(t))) return;
+    const first = await get(`/${pages[0]}/`);
     assert.equal(first.status, 200, `/${pages[0]}/ did not resolve`);
     for (const slug of pages.slice(1)) {
       assert.equal((await get(`/${slug}/`)).status, 200, `/${slug}/ did not resolve`);
@@ -188,52 +253,32 @@ describe("resilience and routing", () => {
   });
 
   it("returns a real 404 for an unknown slug, not a soft 200 (acceptance 7)", async (t) => {
-    let page: Fetched;
-    try {
-      page = await get(`/definitely-not-a-post-${STAMP}/`);
-    } catch {
-      t.skip(`no server reachable at ${BASE}`);
-      return;
-    }
+    if (!(await requireSite(t))) return;
+    const page = await get(`/definitely-not-a-post-${STAMP}/`);
     assert.equal(page.status, 404);
   });
 
   it("serves a sitemap containing the migrated posts", async (t) => {
-    let page: Fetched;
-    try {
-      page = await get("/sitemap.xml");
-    } catch {
-      t.skip(`no server reachable at ${BASE}`);
-      return;
-    }
+    if (!(await requireSite(t))) return;
+    const page = await get("/sitemap.xml");
     assert.equal(page.status, 200);
     assert.ok(page.body.includes("<urlset"));
     assert.ok(page.body.includes("/bulging-disc-vs-herniated-disc/"));
   });
 
   it("keeps the admin out of the index", async (t) => {
-    let robots: Fetched;
-    try {
-      robots = await get("/robots.txt");
-    } catch {
-      t.skip(`no server reachable at ${BASE}`);
-      return;
-    }
+    if (!(await requireSite(t))) return;
+    const robots = await get("/robots.txt");
     assert.ok(robots.body.includes("Disallow: /admin"));
   });
 
   it("refuses an unauthenticated revalidation", async (t) => {
-    let response: Response;
-    try {
-      response = await fetch(`${BASE}/api/revalidate/`, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: "{}",
-      });
-    } catch {
-      t.skip(`no server reachable at ${BASE}`);
-      return;
-    }
+    if (!(await requireSite(t))) return;
+    const response = await fetch(`${BASE}/api/revalidate/`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: "{}",
+    });
     assert.equal(response.status, 401);
   });
 });
@@ -248,6 +293,12 @@ describe("published, scheduled and hidden posts", { skip: SKIP_SEED }, () => {
   const live = slugFor("live");
 
   before(async () => {
+    // Seeding writes real rows and then asserts they do or do not appear. Doing that
+    // against the wrong server would be worse than useless, so confirm the target
+    // before touching the database.
+    const target = await identifyTarget();
+    if (!target.ok) throw new Error(target.why);
+
     db = createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession: false } });
     const { error } = await db.auth.signInWithPassword({
       email: ADMIN_EMAIL,
