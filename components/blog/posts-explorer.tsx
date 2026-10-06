@@ -3,9 +3,9 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
 import { ArrowRight, ArrowUpRight, Search } from "lucide-react";
 import type { PostSummary } from "@/lib/content";
+import { Reveal } from "@/components/ui/reveal";
 import { cn } from "@/lib/utils";
 
 
@@ -148,15 +148,9 @@ export function PostsExplorer({
       ) : (
         <div className={cn("grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3", showControls ? "mt-8" : "mt-0")}>
           {filtered.map((p, i) => (
-            <motion.div
-              key={p.slug}
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.45, delay: (i % 3) * 0.06 }}
-            >
+            <Reveal key={p.slug} delay={(i % 3) * 0.06}>
               <PostCard post={p} />
-            </motion.div>
+            </Reveal>
           ))}
         </div>
       )}

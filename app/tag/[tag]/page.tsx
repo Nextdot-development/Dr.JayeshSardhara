@@ -57,7 +57,7 @@ export default async function TagArchive({ params }: { params: Promise<{ tag: st
         title={`Tag: ${doc.title}`}
         description={`${posts.length} article${posts.length === 1 ? "" : "s"} tagged “${doc.title}”.`}
       />
-      <section className="py-16 lg:py-20">
+      <section className="py-12 lg:py-14">
         <Container>
           {posts.length === 0 ? (
             <p className="border-t border-border py-20 text-center text-muted">

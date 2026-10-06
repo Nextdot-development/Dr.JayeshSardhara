@@ -37,7 +37,7 @@ export default function TestimonialsPage() {
       />
 
       {/* featured real review */}
-      <section className="py-20 lg:py-24">
+      <section className="py-14 lg:py-18">
         <Container>
           <Reveal>
             <span className="flex gap-1 text-gold-500">
@@ -58,7 +58,7 @@ export default function TestimonialsPage() {
       </section>
 
       {/* google reviews widget */}
-      <section className="border-t border-border bg-surface/50 py-20 lg:py-24">
+      <section className="border-t border-border bg-surface/50 py-14 lg:py-18">
         <Container>
           <span className="flex items-center gap-3 text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-teal-700 dark:text-teal-300">
             <span className="h-px w-8 bg-teal-600/50" /> What Patients Say

@@ -10,15 +10,15 @@ import { threePillars } from "@/lib/data";
  */
 export function ThreePillars() {
   return (
-    <section className="border-b border-border py-12 lg:py-14">
+    <section className="border-b border-border py-8 lg:py-10">
       <Container>
         <div className="grid gap-10 sm:grid-cols-3 sm:gap-8">
           {threePillars.map((p, i) => (
             <Reveal key={p.title} delay={i * 0.06}>
-              <div className="flex items-start gap-5 sm:border-l sm:border-navy-900/12 sm:pl-6 dark:sm:border-white/12">
+              <div className="group flex items-start gap-5 transition-colors duration-300 sm:border-l sm:border-navy-900/12 sm:pl-6 sm:hover:border-navy-300 dark:sm:border-white/12 dark:sm:hover:border-white/30">
                 <Icon
                   name={p.icon}
-                  className="mt-1 h-7 w-7 shrink-0 text-teal-600 dark:text-teal-400"
+                  className="mt-1 h-7 w-7 shrink-0 text-teal-600 transition-transform duration-300 ease-out group-hover:-translate-y-0.5 group-hover:scale-110 dark:text-teal-400"
                 />
                 <div>
                   <h3 className="text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-teal-700 dark:text-teal-300">

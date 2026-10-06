@@ -122,7 +122,7 @@ export default async function MigratedPage({ params }: { params: Promise<{ slug:
       <>
         <StoredJsonLd schema={doc.schema} />
         <PageHero breadcrumb={doc.title} title={doc.title} description={doc.excerpt} />
-        <section className="py-16 lg:py-20">
+        <section className="py-12 lg:py-14">
           <Container className="max-w-3xl">
             <div className="article" dangerouslySetInnerHTML={{ __html: html }} />
             {/* Videos migrated from this page's Elementor widgets. */}
@@ -234,7 +234,7 @@ export default async function MigratedPage({ params }: { params: Promise<{ slug:
       </article>
 
       {related.length > 0 && (
-        <section className="border-t border-border py-20">
+        <section className="border-t border-border py-14">
           <Container>
             <h2 className="font-display text-2xl font-medium text-navy-900 dark:text-white">Related articles</h2>
             <div className="mt-10 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">

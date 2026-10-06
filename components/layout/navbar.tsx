@@ -3,18 +3,34 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, Menu, Phone, X } from "lucide-react";
 import { nav, doctor } from "@/lib/data";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/ui/logo";
+import { useScrollLock } from "@/lib/scroll-lock";
 import { cn } from "@/lib/utils";
 
 export function Navbar() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+
+  /**
+   * Freeze the page behind the open panel. The panel now mounts and unmounts instantly,
+   * so the lock tracks `open` directly.
+   */
+  useScrollLock(open);
+
+  /** Esc closes the panel, the same dismissal the gallery lightbox offers. */
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -23,12 +39,21 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => setOpen(false), [pathname]);
+  /**
+   * Close the mobile panel on navigation. Same behaviour as the effect this replaces, as
+   * derived state during render — an effect that only calls setState runs a second render
+   * pass after paint, which is what react-hooks/set-state-in-effect flags.
+   */
+  const [routeAtOpen, setRouteAtOpen] = useState(pathname);
+  if (pathname !== routeAtOpen) {
+    setRouteAtOpen(pathname);
+    setOpen(false);
+  }
 
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
+        "fixed inset-x-0 top-0 z-50 pr-[var(--scrollbar-gap,0px)] transition-all duration-300",
         scrolled ? "border-b border-border bg-background/95 py-3 backdrop-blur-sm" : "py-5",
       )}
     >
@@ -88,7 +113,8 @@ export function Navbar() {
           </Button>
           <button
             className="inline-flex h-10 w-10 items-center justify-center rounded-full ring-1 ring-navy-200 text-navy-800 lg:hidden dark:ring-white/15 dark:text-white"
-            aria-label="Open menu"
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -96,13 +122,8 @@ export function Navbar() {
         </div>
       </Container>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25 }}
+      {open && (
+          <div
             className="overflow-hidden border-t border-border bg-background lg:hidden"
           >
             {/* The panel lives inside a `fixed` header, so anything taller than the
@@ -143,9 +164,8 @@ export function Navbar() {
                 </Button>
               </div>
             </Container>
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
     </header>
   );
 }

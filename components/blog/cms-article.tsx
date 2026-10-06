@@ -132,7 +132,7 @@ export function CmsArticle({ post, related }: { post: BlogRow; related: PostSumm
       </article>
 
       {related.length > 0 && (
-        <section className="border-t border-border py-20">
+        <section className="border-t border-border py-14">
           <Container>
             <h2 className="font-display text-2xl font-medium text-navy-900 dark:text-white">
               Related articles

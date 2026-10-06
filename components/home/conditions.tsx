@@ -3,32 +3,45 @@ import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Reveal } from "@/components/ui/reveal";
-import { Icon } from "@/components/ui/icon";
-import { conditions } from "@/lib/data";
+import { CardImage } from "@/components/ui/card-image";
 
-/**
- * Section 6 of the live WordPress homepage — four conditions across, each with an icon.
- *
- * These are exactly the four the export carried (Brain Tumor, Spine Injury, Stroke,
- * Sciatica) with their migrated copy, in the export's order. The template one-liners that
- * used to pad this grid to six are not homepage content; the full list of eleven is at
- * /conditions/, linked below.
- */
 const CARDS = [
-  { group: "brain", name: "Brain Tumors", icon: "Brain", href: "/brain-surgery/" },
-  { group: "spine", name: "Spine Injury", icon: "Bone", href: "/spine-surgery/" },
-  { group: "brain", name: "Stroke", icon: "Activity", href: "/brain-surgery/" },
-  { group: "spine", name: "Sciatica", icon: "HeartPulse", href: "/spine-surgery/" },
+  {
+    name: "Brain Tumors",
+    href: "/brain-surgery/",
+    img: "/images/conditions/brain-tumors.jpg",
+    alt: "Doctor reviewing a brain MRI scan",
+    body: "Benign or malignant growths in the brain, treated with surgery, radiation or chemotherapy based on type and location.",
+  },
+  {
+    name: "Spine Injury",
+    href: "/spine-surgery/",
+    img: "/images/conditions/spine-injury.jpg",
+    alt: "Neurosurgeon examining a patient's spine",
+    body: "Damage to the spinal cord or its supporting structures from trauma. Early care limits paralysis and long-term disability.",
+  },
+  {
+    name: "Stroke",
+    href: "/brain-surgery/",
+    img: "/images/conditions/stroke.jpg",
+    alt: "Doctor assessing a patient for stroke symptoms",
+    body: "A disruption of blood flow to the brain. Every minute counts, so urgent intervention protects brain function.",
+  },
+  {
+    name: "Sciatica",
+    href: "/spine-surgery/",
+    img: "/images/conditions/sciatica.jpg",
+    alt: "Patient receiving treatment for lower back and leg pain",
+    body: "Nerve pain running from the lower back down one leg, treated with therapy or surgical decompression.",
+  },
 ] as const;
 
-export function Conditions() {
-  const cards = CARDS.map((c) => {
-    const item = conditions[c.group].items.find((i) => i.name === c.name)!;
-    return { ...c, body: item.long ?? item.desc };
-  });
+const LEARN_MORE =
+  "mt-5 inline-flex -translate-x-1.5 items-center gap-1.5 text-sm font-medium tracking-wide text-navy-800 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:opacity-100 max-[601px]:translate-x-0 max-[601px]:opacity-100 dark:text-teal-300";
 
+export function Conditions() {
   return (
-    <section className="border-y border-border bg-surface/50 py-20 lg:py-24" id="conditions">
+    <section className="py-14 lg:py-18" id="conditions">
       <Container>
         <SectionHeading
           layout="split"
@@ -38,21 +51,30 @@ export function Conditions() {
           description="Every condition is met with an accurate diagnosis and a tailored, evidence-based plan."
         />
 
-        <div className="mt-12 grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
-          {cards.map((c, i) => (
+        <div className="mt-12 grid grid-cols-1 items-start gap-10 min-[601px]:grid-cols-2 lg:grid-cols-4">
+          {CARDS.map((c, i) => (
             <Reveal key={c.name} delay={(i % 4) * 0.05}>
               <Link
                 href={c.href}
-                className="group flex h-full flex-col border-t border-navy-900/15 pt-5 dark:border-white/15"
+                className="group flex h-full flex-col focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-500"
               >
-                <Icon
-                  name={c.icon}
-                  className="h-8 w-8 text-teal-600 transition-colors group-hover:text-teal-700 dark:text-teal-400"
+                <CardImage
+                  src={c.img}
+                  alt={c.alt}
+                  ratio="4/3"
+                  sizes="(min-width: 1024px) 22vw, (min-width: 601px) 45vw, 92vw"
                 />
-                <h3 className="mt-5 font-display text-xl font-medium text-navy-900 transition-colors group-hover:text-teal-700 dark:text-white dark:group-hover:text-teal-300">
+
+                <h3 className="mt-6 font-display text-xl font-medium text-navy-900 transition-colors group-hover:text-teal-700 dark:text-white dark:group-hover:text-teal-300">
                   {c.name}
                 </h3>
+
                 <p className="mt-3 text-sm leading-relaxed text-muted">{c.body}</p>
+
+                <span className={LEARN_MORE}>
+                  Learn more
+                  <ArrowRight className="h-4 w-4" aria-hidden />
+                </span>
               </Link>
             </Reveal>
           ))}

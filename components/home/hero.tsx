@@ -1,92 +1,134 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Clock, Stethoscope } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
+import { doctor, SURGERIES_TOTAL } from "@/lib/data";
+import { ThreePillars } from "./three-pillars";
+import { TrustStats } from "./trust-stats";
 
-const rise = {
-  hidden: { opacity: 0, y: 20 },
-  show: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.7, delay: 0.08 * i, ease: [0.22, 1, 0.36, 1] as const },
-  }),
-};
+const BANNER = "/images/hero-banner-spine.jpg";
+const PORTRAIT = "/images/doctor1.png";
+const PORTRAIT_ALT = "Dr. Jayesh Sardhara, Neurosurgeon & Spine Surgeon";
+const PORTRAIT_SIZES = "(min-width: 1280px) 44vw, (min-width: 1024px) 36vw, 92vw";
 
-/**
- * Full-bleed hero banner: the WordPress hero background running edge to edge, with the
- * headline sitting on a warm scrim over its left third.
- *
- * The background is the live site's own hero asset (1920x1080, brain + cervical spine
- * imaging). It is dark blue, so the copy is never placed on top of it directly — the
- * gradient below fades the page background across the left ~60% to keep the burgundy
- * headline and the fixed navbar at AA contrast, and lets the imaging show through on the
- * right where nothing overlaps it. `object-right` keeps the spine, not the empty middle,
- * in frame as the viewport narrows.
- */
 export function Hero() {
   return (
-    <section className="relative isolate overflow-hidden">
-      <div className="absolute inset-0 -z-10">
-        <Image
-          src="/wp-content/uploads/2025/01/JAYESH-HOME-PAGE2-1.png"
-          alt=""
-          aria-hidden
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-right"
-        />
-        {/* Legibility scrim. Two stops rather than one so the headline sits on a flat
-            wash instead of a visible ramp behind the text itself. */}
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/95 via-45% to-background/5" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background/70 to-transparent" />
+    <section className="relative isolate overflow-hidden bg-background">
+      <div className="relative">
+        <div aria-hidden className="absolute inset-0 -z-10">
+          <Image
+            src={BANNER}
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-right opacity-70 dark:opacity-40"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/60 to-background/10 lg:from-background/70 lg:via-background/20 lg:to-transparent dark:from-background dark:via-background/85 dark:to-background/50" />
+          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-background" />
+        </div>
+
+        <div className="pointer-events-none absolute inset-0 z-0 hidden lg:block">
+          <Container className="relative h-full">
+            <div className="absolute bottom-0 right-24 top-28 w-[36%] xl:w-[44%] 2xl:right-36 2xl:top-32 2xl:w-[40%] min-[1800px]:right-48">
+              <div className="absolute bottom-0 right-0 h-[62%] w-[62%] rounded-full bg-teal-100/40 blur-3xl dark:bg-teal-500/10" />
+              <Image
+                src={PORTRAIT}
+                alt={PORTRAIT_ALT}
+                fill
+                priority
+                sizes={PORTRAIT_SIZES}
+                className="object-contain object-right-top"
+              />
+            </div>
+          </Container>
+        </div>
+
+        <Container>
+         
+          <div className="relative z-10 grid items-center gap-10 pb-16 pt-28 sm:pt-32 md:min-h-svh md:pb-12 md:pt-28 lg:grid-cols-12 lg:gap-8 lg:pb-16 lg:pt-32">
+            <div className="lg:col-span-7">
+             
+
+              <h1
+                className="mt-6 font-display text-[2.6rem] font-medium leading-[1.02] tracking-[-0.02em] text-navy-900 xs:text-[3.1rem] sm:text-6xl lg:text-[4.7rem] dark:text-white"
+              >
+               
+                Your Health Is
+                <br />
+                <em className="not-italic text-gradient font-display italic">Our Priority</em>
+              </h1>
+              <p
+                className="mt-6 max-w-lg text-lg leading-relaxed text-muted 2xl:max-w-xl"
+              >
+                {doctor.tagline}
+              </p>
+
+              <div
+                className="mt-8 flex flex-wrap items-center gap-3"
+              >
+                  <Button href="#book_now" size="lg">
+                    Book An Appointment <ArrowRight className="h-4 w-4" />
+                  </Button>
+                  <Button href="#whychooseus" size="lg">
+                    Why Choose Us <ArrowUpRight className="h-4 w-4" />
+                  </Button>
+              </div>
+
+              
+              <div className="relative mt-12 h-[19rem] w-full overflow-hidden rounded-4xl bg-gradient-to-b from-navy-50 to-teal-50 sm:h-[24rem] md:mt-8 md:h-68 lg:hidden dark:from-navy-800 dark:to-navy-950">
+                <Image
+                  src={PORTRAIT}
+                  alt={PORTRAIT_ALT}
+                  fill
+                  sizes={PORTRAIT_SIZES}
+                  className="object-contain object-bottom"
+                />
+              </div>
+
+              <div
+                className="mt-10 grid max-w-xl gap-3 sm:grid-cols-2 md:mt-8 2xl:max-w-2xl"
+              >
+                <div className="flex items-center gap-3 rounded-3xl bg-white p-4 shadow-card ring-1 ring-navy-100 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-soft hover:ring-navy-200 sm:col-span-2 dark:bg-white/5 dark:ring-white/10">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-navy-50 text-navy-700 dark:bg-white/10 dark:text-teal-300">
+                    <Stethoscope className="h-5 w-5" aria-hidden />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block truncate text-sm font-semibold text-navy-900 dark:text-white">
+                      {doctor.name}
+                    </span>
+                    <span className="block truncate text-xs text-muted">{doctor.credentials}</span>
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-3 rounded-3xl bg-white p-4 shadow-card ring-1 ring-navy-100 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-soft hover:ring-navy-200 dark:bg-white/5 dark:ring-white/10">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-teal-50 text-teal-700 dark:bg-white/10 dark:text-teal-300">
+                    <Clock className="h-5 w-5" aria-hidden />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block text-xs font-medium uppercase tracking-wider text-muted">OPD</span>
+                    <span className="block text-sm font-semibold text-navy-900 dark:text-white">{doctor.opd}</span>
+                  </span>
+                </div>
+
+                <div className="rounded-3xl bg-white p-4 shadow-card ring-1 ring-navy-100 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-soft hover:ring-navy-200 dark:bg-white/5 dark:ring-white/10">
+                  <span className="block font-display text-2xl font-medium tracking-tight text-navy-900 dark:text-white">
+                    {SURGERIES_TOTAL}
+                  </span>
+                  <span className="mt-0.5 block text-xs font-medium uppercase tracking-wider text-muted">
+                    Surgeries Performed
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Container>
       </div>
 
-      <Container>
-        <div className="max-w-2xl py-28 sm:py-32 lg:py-40">
-          <motion.p
-            variants={rise}
-            custom={0}
-            initial="hidden"
-            animate="show"
-            className="flex items-center gap-3 text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-teal-700 dark:text-teal-300"
-          >
-            <span className="h-px w-8 bg-teal-600/50" />
-            {/* Live WordPress hero eyebrow, verbatim. */}
-            feel the difference with us
-          </motion.p>
-
-          <motion.h1
-            variants={rise}
-            custom={1}
-            initial="hidden"
-            animate="show"
-            className="mt-6 font-display text-[2.6rem] font-medium leading-[1.02] tracking-[-0.02em] text-navy-900 xs:text-[3.1rem] sm:text-6xl lg:text-[4.7rem] dark:text-white"
-          >
-            {/* Live WordPress H1 was the fragment "Your Health Is", with "Our Priority" in a
-                separate <p>. Same words, completed into one heading — see home-content.json
-                seo.headingAudit. */}
-            Your Health Is
-            <br />
-            <em className="not-italic text-gradient font-display italic">Our Priority</em>
-          </motion.h1>
-
-          <motion.div
-            variants={rise}
-            custom={2}
-            initial="hidden"
-            animate="show"
-            className="mt-9"
-          >
-            <Button href="#book_now" size="lg">
-              Book An Appointment <ArrowRight className="h-4 w-4" />
-            </Button>
-          </motion.div>
-        </div>
-      </Container>
+      <ThreePillars />
+      <TrustStats />
     </section>
   );
 }

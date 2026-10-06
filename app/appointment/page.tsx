@@ -41,7 +41,7 @@ export default function AppointmentPage() {
         description="Take the first step toward expert brain and spine care. Request a time online, or reach us directly for urgent needs."
       />
 
-      <section className="py-20 lg:py-28">
+      <section className="py-14 lg:py-20">
         <Container className="grid gap-14 lg:grid-cols-12 lg:gap-16">
           {/* form */}
           <Reveal className="order-2 lg:order-1 lg:col-span-7">

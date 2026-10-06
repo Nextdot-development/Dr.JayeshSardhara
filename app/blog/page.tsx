@@ -33,7 +33,7 @@ export default async function BlogPage() {
         title="Insights for brain & spine health"
         description="Clear, medically-reviewed articles to help you understand your condition and make confident decisions about your care."
       />
-      <section className="py-16 lg:py-20">
+      <section className="py-12 lg:py-14">
         <Container>
           <PostsExplorer posts={posts} />
         </Container>

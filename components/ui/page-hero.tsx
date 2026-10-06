@@ -17,7 +17,7 @@ export function PageHero({
   children?: ReactNode;
 }) {
   return (
-    <section className="relative overflow-hidden border-b border-border pt-36 pb-16 sm:pt-44 lg:pb-20">
+    <section className="relative overflow-hidden border-b border-border pt-36 pb-12 sm:pt-44 lg:pb-14">
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute -right-40 -top-32 h-[28rem] w-[28rem] rounded-full bg-teal-400/[0.06] blur-3xl" />
       </div>

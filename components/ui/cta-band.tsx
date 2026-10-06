@@ -7,7 +7,7 @@ import { doctor } from "@/lib/data";
 export function CtaBand() {
   const wa = `https://wa.me/${doctor.whatsapp}?text=${encodeURIComponent("Hello, I'd like to book a consultation.")}`;
   return (
-    <section className="py-20 lg:py-24">
+    <section className="py-14 lg:py-18">
       <Container>
         <Reveal className="overflow-hidden rounded-2xl border-t-2 border-teal-500 bg-navy-900 text-white dark:bg-navy-950">
           <div className="grid items-center gap-10 p-6 sm:p-14 lg:grid-cols-[1.5fr_1fr]">

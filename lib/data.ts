@@ -35,11 +35,12 @@ export const doctor = {
   books: 2,
   rating: 5.0,
   reviews: 99,
-  phone: "+91 98928 05422",
-  phoneRaw: "+919892805422",
-  whatsapp: "919892805422",
+  phone: "+91 91379 96799",
+  phoneRaw: "+919137996799",
+  whatsapp: "919137996799",
   email: "jayeshsardhara83@gmail.com",
-  opd: "Mon – Sat · 11:00 AM – 4:00 PM",
+  /** Daily except Sunday. Kept in the "Mon – Sat · …" house format the UI already uses. */
+  opd: "Mon – Sat · 7:30 PM – 9:00 PM",
 };
 
 export const locations = [
@@ -49,8 +50,8 @@ export const locations = [
     kind: "Primary Surgical Centre",
   },
   {
-    name: "O & S Business Suite",
-    address: "Ghatkopar West, Mumbai",
+    name: "Om polyclinic",
+    address: "17, Tridev Shopping Complex, Bhakti Marg, Mulund West, Mumbai",
     kind: "Consultation Clinic",
   },
 ];

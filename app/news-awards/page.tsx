@@ -31,18 +31,18 @@ export default function AwardsPage() {
           the third awards touchpoint on `/`, and this is the awards page. Same
           images, unchanged. See _migration/PAGE-REBUILD.md §6.
 
-          The default `pb-16 lg:pb-20` carries no TOP padding: the gallery used to sit
+          The default `pb-12 lg:pb-14` carries no TOP padding: the gallery used to sit
           under the leadership band, which supplied the gap. With the metrics strip,
           the honours timeline and that band removed, the gallery now follows the hero
           directly and its eyebrow would butt straight against the hero's bottom border,
           so the same value is applied on both sides. Images, order and captions are
           untouched. */}
-      <AwardsGallery className="py-16 lg:py-20" />
+      <AwardsGallery className="py-12 lg:py-14" />
 
       {/* ── News ──────────────────────────────────────────────────────────────
           Migrated from the live /news-awards/ page. The template had no press
           section at all — see _migration/PAGE-REBUILD.md §6. */}
-      <section className="border-t border-border py-20 lg:py-24">
+      <section className="border-t border-border py-14 lg:py-18">
         <Container>
           <SectionHeading
             eyebrow="News"

@@ -39,7 +39,7 @@ export default function ConditionsPage() {
         description="An accurate diagnosis is the foundation of good care. Explore the brain and spine conditions we treat — each with a tailored, evidence-based plan."
       />
 
-      <section className="py-20 lg:py-28">
+      <section className="py-14 lg:py-20">
         <Container className="space-y-24">
           {groups.map((g) => (
             <div key={g.title} className="grid gap-10 lg:grid-cols-12 lg:gap-16">

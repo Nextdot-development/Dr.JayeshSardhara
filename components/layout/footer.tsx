@@ -22,6 +22,23 @@ const services = [
 export function Footer() {
   return (
     <footer className="mt-24 border-t border-border bg-surface">
+      <div className="border-t border-border">
+        <Container className="py-10">
+          <h3 className="text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-teal-700 dark:text-teal-300">
+            Find the Clinic
+          </h3>
+          <div className="mt-5 aspect-[16/9] w-full overflow-hidden border border-navy-900/10 bg-surface-2 sm:aspect-[21/9] dark:border-white/10">
+            <iframe
+              src={mapEmbed.src}
+              title={mapEmbed.title}
+              aria-label={mapEmbed.title}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="h-full w-full border-0"
+            />
+          </div>
+        </Container>
+      </div>
       <Container className="grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-4">
         <div className="lg:col-span-1">
           <Link href="/" className="flex items-center gap-3" aria-label={doctor.name}>
@@ -95,28 +112,7 @@ export function Footer() {
           </ul>
         </div>
       </Container>
-
-
-      {/* Fortis Mulund location map — the exact embed from the live WordPress homepage.
-          `loading="lazy"` matches what WordPress served and keeps it off the critical path:
-          the footer is always below the fold, so the iframe is never fetched on load. */}
-      <div className="border-t border-border">
-        <Container className="py-10">
-          <h3 className="text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-teal-700 dark:text-teal-300">
-            Find the Clinic
-          </h3>
-          <div className="mt-5 aspect-[16/9] w-full overflow-hidden border border-navy-900/10 bg-surface-2 sm:aspect-[21/9] dark:border-white/10">
-            <iframe
-              src={mapEmbed.src}
-              title={mapEmbed.title}
-              aria-label={mapEmbed.title}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              className="h-full w-full border-0"
-            />
-          </div>
-        </Container>
-      </div>
+      
       <div className="border-t border-border">
         <Container className="flex flex-col gap-4 py-6 text-xs text-muted md:flex-row md:items-center md:justify-between">
           <p>© {new Date().getFullYear()} {doctor.name}. All rights reserved.</p>

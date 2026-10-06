@@ -44,7 +44,7 @@ export default function ContactPage() {
         description="Reach out by phone, WhatsApp or the form below. For emergencies, please call us directly."
       />
 
-      <section className="py-20 lg:py-28">
+      <section className="py-14 lg:py-20">
         <Container className="grid gap-14 lg:grid-cols-12 lg:gap-16">
           {/* left column */}
           <div className="lg:col-span-5">

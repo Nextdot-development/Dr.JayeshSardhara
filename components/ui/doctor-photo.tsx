@@ -1,10 +1,7 @@
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
-/**
- * Real professional portrait (transparent cut-out) placed on a soft clinical
- * panel so the figure reads cleanly in both light and dark themes.
- */
+
 export function DoctorPhoto({
   className,
   priority = false,
@@ -24,12 +21,12 @@ export function DoctorPhoto({
       <div className="absolute inset-x-0 top-0 h-1/2 bg-grid opacity-40 dark:opacity-20" />
       <div className="absolute -right-10 top-6 h-40 w-40 rounded-full bg-teal-400/15 blur-3xl" />
       <Image
-        src="/images/Dr-Image1.png"
+        src="/images/doctor_img.png"
         alt="Dr. Jayesh Sardhara, Neurosurgeon & Spine Surgeon"
         fill
         priority={priority}
         sizes={sizes}
-        className="object-contain object-bottom"
+        className="object-cover object-top "
       />
     </div>
   );

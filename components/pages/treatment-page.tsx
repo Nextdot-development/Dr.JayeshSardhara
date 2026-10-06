@@ -36,7 +36,7 @@ export function TreatmentPage({ data }: { data: TreatmentData }) {
       </Container>
 
       {/* intro + benefits */}
-      <section className="py-24 lg:py-32">
+      <section className="py-16 lg:py-24">
         <Container className="grid gap-14 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-7">
             <SectionHeading index="01" eyebrow="Overview" title="A precise, minimally invasive approach" />
@@ -79,7 +79,7 @@ export function TreatmentPage({ data }: { data: TreatmentData }) {
       </section>
 
       {/* procedures — index list */}
-      <section className="border-y border-border bg-surface/50 py-24 lg:py-32">
+      <section className="border-y border-border bg-surface/50 py-16 lg:py-24">
         <Container>
           <SectionHeading
             index="02"
@@ -107,7 +107,7 @@ export function TreatmentPage({ data }: { data: TreatmentData }) {
       </section>
 
       {/* faqs */}
-      <section className="py-24 lg:py-32">
+      <section className="py-16 lg:py-24">
         <Container className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
           <SectionHeading index="03" eyebrow="FAQ" title="Questions patients ask" />
           <Faq items={data.faqs} />
@@ -115,7 +115,7 @@ export function TreatmentPage({ data }: { data: TreatmentData }) {
       </section>
 
       {videos[data.slug]?.length ? (
-        <section className="border-t border-border py-20 lg:py-24">
+        <section className="border-t border-border py-14 lg:py-18">
           <Container>
             <SectionHeading eyebrow="Watch" title="Surgical technique" />
             <div className="mt-10 grid gap-8 md:grid-cols-2">

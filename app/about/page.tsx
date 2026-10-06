@@ -74,7 +74,7 @@ export default function AboutPage() {
       </PageHero>
 
       {/* biography */}
-      <section className="py-20 lg:py-28">
+      <section className="py-14 lg:py-20">
         <Container className="grid items-start gap-14 lg:grid-cols-12 lg:gap-16">
           <Reveal className="lg:col-span-5 lg:sticky lg:top-28">
             <div className="border border-navy-900/10 p-2 dark:border-white/10">
@@ -173,7 +173,7 @@ export default function AboutPage() {
       </section>
 
       {/* leadership / conference image */}
-      <section className="border-t border-border bg-surface/50 py-20 lg:py-24">
+      <section className="border-t border-border bg-surface/50 py-14 lg:py-18">
         <Container>
           <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
             <Reveal>
@@ -209,7 +209,7 @@ export default function AboutPage() {
 
       {/* Areas of Expertise — long-form copy migrated from the live /about/ page.
           See _migration/PAGE-REBUILD.md §2. */}
-      <section className="py-20 lg:py-24">
+      <section className="py-14 lg:py-18">
         <Container>
           <SectionHeading eyebrow="Expertise" title="Areas of Expertise" />
           <div className="mt-12 grid gap-x-12 gap-y-10 lg:grid-cols-2">
@@ -227,7 +227,7 @@ export default function AboutPage() {
 
       {/* Honours and Awards — the live /about/ page carried this list and ours did not.
           Rendered from the shared `awards` data so /about/ and /news-awards/ stay in step. */}
-      <section className="border-t border-border py-20 lg:py-24">
+      <section className="border-t border-border py-14 lg:py-18">
         <Container>
           <SectionHeading eyebrow="Recognition" title="Honours and Awards" />
           <ul className="mt-10 border-t border-navy-900/12 dark:border-white/12">
@@ -259,7 +259,7 @@ export default function AboutPage() {
           `aria-label` on each column rather than `aria-labelledby`: SectionHeading renders
           the <h2> and takes no `id`, and it is shared by every page on the site — labelling
           here avoids reaching into a component this change has no business touching. */}
-      <section className="border-t border-border py-20 lg:py-24">
+      <section className="border-t border-border py-14 lg:py-18">
         <Container>
           <div className="grid items-start gap-14 lg:grid-cols-12 lg:gap-16">
             <section aria-label="About Jayesh Sardhara" className="lg:col-span-7">

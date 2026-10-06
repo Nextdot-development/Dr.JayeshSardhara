@@ -28,6 +28,10 @@ const nextConfig: NextConfig = {
 
   images: {
     remotePatterns: supabaseImagePatterns(),
+    // Next negotiates these by Accept header and falls back to the original on anything
+    // that supports neither. The default is WebP alone; AVIF is listed first because it
+    // is the smaller of the two at equal quality for the photography in the card grids.
+    formats: ["image/avif", "image/webp"],
   },
 
   // WordPress served every URL with a trailing slash and the sitemap/canonicals still

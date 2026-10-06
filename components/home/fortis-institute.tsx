@@ -4,18 +4,11 @@ import { Reveal } from "@/components/ui/reveal";
 import { VideoEmbed } from "@/components/ui/video-embed";
 import { doctor, homeInlineVideos } from "@/lib/data";
 
-/**
- * Section 8 of the live WordPress homepage — the Fortis Institute positioning block.
- *
- * Both paragraphs are verbatim, and were previously appended to the end of <About>. The
- * export has them as their own section with their own video, so they are their own
- * section here too: video left, prose right.
- */
 export function FortisInstitute() {
   return (
-    <section className="py-20 lg:py-24" id="fortis-institute">
+    <section className="border-y border-border bg-surface/50 py-14 lg:py-18" id="fortis-institute">
       <Container>
-        <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
+        <div className="grid items-start gap-12 lg:grid-cols-12 lg:gap-16">
           <Reveal className="lg:col-span-6">
             <VideoEmbed video={homeInlineVideos.fortis} />
           </Reveal>
