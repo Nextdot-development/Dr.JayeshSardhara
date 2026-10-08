@@ -63,6 +63,21 @@ type Values = {
 
 const LIMITS = { name: 120, phone: 40, email: 160, message: 4000 } as const;
 
+/**
+ * Posted straight from the browser rather than relayed through our API route.
+ *
+ * The route worked locally but not in production: FormSubmit refuses requests from cloud
+ * IPs, and on Vercel the route runs as a serverless function on exactly such an IP. From
+ * the browser the request carries the visitor's own IP and a genuine Origin, which is what
+ * FormSubmit expects.
+ *
+ * Set NEXT_PUBLIC_FORMSUBMIT_ID to FormSubmit's hashed alias to keep the destination
+ * address out of the page source; it falls back to the address itself so the form still
+ * works before that is configured.
+ */
+const FORMSUBMIT_ID = process.env.NEXT_PUBLIC_FORMSUBMIT_ID ?? "nextdot.agency@gmail.com";
+const FORMSUBMIT_ENDPOINT = `https://formsubmit.co/ajax/${encodeURIComponent(FORMSUBMIT_ID)}`;
+
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const PHONE_RE = /^\+?[\d][\d\s().-]{6,}$/;
@@ -95,16 +110,50 @@ export function AppointmentForm({ variant = "default" }: { variant?: Variant } =
   const onSubmit = handleSubmit(async (values) => {
     setFormError(null);
 
-    try {
-      const res = await fetch("/api/appointment/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
-      const payload: { ok?: boolean; error?: string } = await res.json().catch(() => ({}));
+    // Honeypot: hidden from people, filled by naive bots. Report success so the bot does
+    // not retry, and send nothing. FormSubmit also drops anything with `_honey` set, so
+    // this is belt and braces.
+    if (values.company) {
+      setSent(true);
+      return;
+    }
 
-      if (!res.ok || !payload.ok) {
-        setFormError(payload.error ?? "Something went wrong. Please call us instead.");
+    /**
+     * FormSubmit uses these keys as the row labels in the email, so they are what the
+     * practice reads in the inbox. `_`-prefixed keys are its own directives, not data.
+     */
+    const payload: Record<string, string> = {
+      Name: values.name,
+      Phone: values.phone,
+      Email: values.email || "(not given)",
+      Service: values.service || "(not selected)",
+      "Preferred date": values.date || "(no preference)",
+      Message: values.message || "(none)",
+      Submitted: new Date().toISOString(),
+
+      _subject: `Appointment request — ${values.name}${values.service ? ` (${values.service})` : ""}`,
+      _template: "table",
+      _captcha: "false",
+      _honey: values.company,
+    };
+    // Omitted rather than sent empty: FormSubmit rejects a malformed reply-to outright.
+    if (values.email) payload._replyto = values.email;
+
+    try {
+      const res = await fetch(FORMSUBMIT_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(payload),
+      });
+      // The AJAX endpoint answers `success` as the string "true"; some responses use a
+      // boolean. Both are accepted rather than assuming one shape.
+      const body: { success?: unknown; message?: string } = await res.json().catch(() => ({}));
+      const ok = res.ok && (body.success === true || body.success === "true");
+
+      if (!ok) {
+        // Most likely cause is the form not being activated yet — FormSubmit says so here.
+        console.error("[appointment] FormSubmit rejected the send:", res.status, body.message);
+        setFormError("We could not send your request just now. Please call us instead.");
         return;
       }
       setSent(true);
