@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ExternalLink, FileText, FolderTree, ImageIcon, LayoutDashboard, LogOut } from "lucide-react";
+import { ExternalLink, FileText, FolderTree, ImageIcon, LayoutDashboard, LogOut, Users } from "lucide-react";
 import { useAuth } from "@/components/admin/auth-provider";
 import { cn } from "@/lib/utils";
 
 const LINKS = [
   { href: "/admin/", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/leads/", label: "Leads", icon: Users },
   { href: "/admin/blogs/", label: "Posts", icon: FileText },
   { href: "/admin/media/", label: "Media", icon: ImageIcon },
   { href: "/admin/categories/", label: "Categories", icon: FolderTree },

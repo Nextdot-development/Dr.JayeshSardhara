@@ -63,18 +63,6 @@ type Values = {
 
 const LIMITS = { name: 120, phone: 40, email: 160, message: 4000 } as const;
 
-/**
- * Posted straight from the browser rather than relayed through our API route.
- *
- * The route worked locally but not in production: FormSubmit refuses requests from cloud
- * IPs, and on Vercel the route runs as a serverless function on exactly such an IP. From
- * the browser the request carries the visitor's own IP and a genuine Origin, which is what
- * FormSubmit expects.
- *
- * Set NEXT_PUBLIC_FORMSUBMIT_ID to FormSubmit's hashed alias to keep the destination
- * address out of the page source; it falls back to the address itself so the form still
- * works before that is configured.
- */
 const FORMSUBMIT_ID = process.env.NEXT_PUBLIC_FORMSUBMIT_ID ?? "nextdot.agency@gmail.com";
 const FORMSUBMIT_ENDPOINT = `https://formsubmit.co/ajax/${encodeURIComponent(FORMSUBMIT_ID)}`;
 
@@ -95,6 +83,8 @@ export function AppointmentForm({ variant = "default" }: { variant?: Variant } =
   const c = cells[variant];
   const compact = variant === "compact";
   const [sent, setSent] = useState(false);
+ 
+  const [submissionId, setSubmissionId] = useState(() => crypto.randomUUID());
   const [formError, setFormError] = useState<string | null>(null);
 
   const {
@@ -110,18 +100,39 @@ export function AppointmentForm({ variant = "default" }: { variant?: Variant } =
   const onSubmit = handleSubmit(async (values) => {
     setFormError(null);
 
-    // Honeypot: hidden from people, filled by naive bots. Report success so the bot does
-    // not retry, and send nothing. FormSubmit also drops anything with `_honey` set, so
-    // this is belt and braces.
     if (values.company) {
       setSent(true);
       return;
     }
 
-    /**
-     * FormSubmit uses these keys as the row labels in the email, so they are what the
-     * practice reads in the inbox. `_`-prefixed keys are its own directives, not data.
-     */
+
+    try {
+      const res = await fetch("/api/leads/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          submission_id: submissionId,
+          name: values.name,
+          phone: values.phone,
+          email: values.email,
+          service: values.service,
+          preferred_date: values.date,
+          message: values.message,
+          company: values.company,
+          source: "appointment-form",
+          source_path: typeof window === "undefined" ? "" : window.location.pathname,
+        }),
+      });
+      const saved: { ok?: boolean; error?: string } = await res.json().catch(() => ({}));
+      if (!res.ok || !saved.ok) {
+        setFormError(saved.error ?? "We could not record your request. Please call us instead.");
+        return;
+      }
+    } catch {
+      setFormError("We could not reach the server. Please check your connection or call us.");
+      return;
+    }
+
     const payload: Record<string, string> = {
       Name: values.name,
       Phone: values.phone,
@@ -153,13 +164,13 @@ export function AppointmentForm({ variant = "default" }: { variant?: Variant } =
       if (!ok) {
         // Most likely cause is the form not being activated yet — FormSubmit says so here.
         console.error("[appointment] FormSubmit rejected the send:", res.status, body.message);
-        setFormError("We could not send your request just now. Please call us instead.");
-        return;
       }
-      setSent(true);
-    } catch {
-      setFormError("We could not reach the server. Please check your connection or call us.");
+    } catch (err) {
+      console.error("[appointment] could not reach FormSubmit:", err);
     }
+
+
+    setSent(true);
   });
 
   if (sent) {
@@ -173,6 +184,7 @@ export function AppointmentForm({ variant = "default" }: { variant?: Variant } =
         <ButtonAction
           onClick={() => {
             reset();
+            setSubmissionId(crypto.randomUUID());
             setSent(false);
           }}
         >
