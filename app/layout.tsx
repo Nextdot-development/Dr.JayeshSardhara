@@ -7,6 +7,7 @@ import { Footer } from "@/components/layout/footer";
 import { FloatingWhatsApp } from "@/components/layout/floating-whatsapp";
 import { ScrollProgress } from "@/components/layout/scroll-progress";
 import { SiteChrome } from "@/components/layout/site-chrome";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { doctor, siteUrl } from "@/lib/data";
 import { OG_IMAGE } from "@/lib/seo";
 
@@ -22,6 +23,8 @@ const fraunces = Fraunces({
   display: "swap",
   axes: ["opsz"],
 });
+
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -65,17 +68,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       className={`${jakarta.variable} ${fraunces.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        {/* `forcedTheme` because the dark-mode switch has been removed from the navbar.
-            Without it `enableSystem` would still flip the whole site to dark for anyone
-            whose OS is set to dark, and a visitor who had toggled dark before would stay
-            dark forever via next-themes' localStorage entry — in both cases with no
-            control left to get back. Forcing light ignores both and pins the one theme
-            the site now ships. The provider itself stays so the `dark:` variants
-            throughout the components remain valid and this is a one-line revert. */}
         <ThemeProvider attribute="class" forcedTheme="light" disableTransitionOnChange>
-          {/* <SiteChrome> renders the public shell everywhere EXCEPT /admin, which is a
-              dashboard and has no business carrying a patient-facing navbar, footer or
-              WhatsApp button. Public routes are unaffected — see components/layout/site-chrome.tsx. */}
           <SiteChrome
             chrome={{
               top: (
@@ -94,6 +87,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                 <>
                   <Footer />
                   <FloatingWhatsApp />
+                  {GA_ID && <GoogleAnalytics gaId={GA_ID} />}
                 </>
               ),
             }}
