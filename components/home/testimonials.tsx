@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { RatingBadge, ReviewCard } from "@/components/testimonials/review-card";
@@ -23,10 +23,10 @@ export function Testimonials() {
 
           <Link
             href="/testimonials/"
-            className="group inline-flex shrink-0 items-center gap-2 text-sm font-medium text-navy-800 md:mt-1.5 dark:text-white/80"
+            className="group -my-1 inline-flex shrink-0 items-center gap-2 py-1 text-sm font-medium text-navy-800 md:mt-1.5 dark:text-white/80"
           >
             All Google reviews
-            <ArrowRight className="h-4 w-4 text-teal-600 transition-transform group-hover:translate-x-1 dark:text-teal-400" />
+            <ArrowUpRight className="h-4 w-4 text-teal-600 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 dark:text-teal-400" />
           </Link>
         </div>
 

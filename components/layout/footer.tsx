@@ -21,7 +21,7 @@ const services = [
 
 export function Footer() {
   return (
-    <footer className="mt-24 border-t border-border bg-surface">
+    <footer className="mt-12 border-t border-border bg-surface">
       <div className="border-t border-border">
         <Container className="py-10">
           <h3 className="text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-teal-700 dark:text-teal-300">
@@ -67,7 +67,7 @@ export function Footer() {
           <ul className="mt-4 space-y-2.5">
             {nav.map((it) => (
               <li key={it.label}>
-                <Link href={it.href} className="text-sm text-muted transition-colors hover:text-teal-600">
+                <Link href={it.href} className="inline-block py-1 text-sm text-muted transition-colors hover:text-teal-600">
                   {it.label}
                 </Link>
               </li>
@@ -80,7 +80,7 @@ export function Footer() {
           <ul className="mt-4 space-y-2.5">
             {services.map((s) => (
               <li key={s.label}>
-                <Link href={s.href} className="text-sm text-muted transition-colors hover:text-teal-600">
+                <Link href={s.href} className="inline-block py-1 text-sm text-muted transition-colors hover:text-teal-600">
                   {s.label}
                 </Link>
               </li>
@@ -93,11 +93,11 @@ export function Footer() {
           <ul className="mt-4 space-y-3.5 text-sm text-muted">
             <li className="flex items-start gap-3">
               <Phone className="mt-0.5 h-4 w-4 shrink-0 text-teal-500" />
-              <a href={`tel:${doctor.phoneRaw}`} className="hover:text-teal-600">{doctor.phone}</a>
+              <a href={`tel:${doctor.phoneRaw}`} className="inline-block py-1 hover:text-teal-600">{doctor.phone}</a>
             </li>
             <li className="flex items-start gap-3">
               <Mail className="mt-0.5 h-4 w-4 shrink-0 text-teal-500" />
-              <a href={`mailto:${doctor.email}`} className="break-all hover:text-teal-600">{doctor.email}</a>
+              <a href={`mailto:${doctor.email}`} className="inline-block break-all py-1 hover:text-teal-600">{doctor.email}</a>
             </li>
             {locations.map((l) => (
               <li key={l.name} className="flex items-start gap-3">

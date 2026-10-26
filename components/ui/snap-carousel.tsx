@@ -155,11 +155,15 @@ export function CarouselControls({
             onClick={() => onGo(i)}
             aria-label={`Go to ${noun} ${i + 1} of ${pages}`}
             aria-current={i === active ? "true" : undefined}
-            className={cn(
-              "h-1.5 rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-400",
-              i === active ? "w-6 bg-navy-800 dark:bg-teal-300" : "w-1.5 bg-navy-900/20 hover:bg-navy-900/40 dark:bg-white/25",
-            )}
-          />
+            className="group -my-2.5 flex items-center py-2.5 focus-visible:outline-none"
+          >
+            <span
+              className={cn(
+                "block h-1.5 rounded-full transition-all duration-300 group-focus-visible:ring-2 group-focus-visible:ring-teal-400",
+                i === active ? "w-6 bg-navy-800 dark:bg-teal-300" : "w-1.5 bg-navy-900/20 group-hover:bg-navy-900/40 dark:bg-white/25",
+              )}
+            />
+          </button>
         ))}
       </div>
 

@@ -3,9 +3,10 @@
 import { useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight, Search } from "lucide-react";
+import { ArrowUpRight, ChevronLeft, ChevronRight, Search } from "lucide-react";
 import type { PostSummary } from "@/lib/content";
 import { Reveal } from "@/components/ui/reveal";
+import { BLOG_TOPICS, topicsForPost } from "@/lib/blog-topics";
 import { cn } from "@/lib/utils";
 
 function formatDate(d: string) {
@@ -132,8 +133,16 @@ export function PostsExplorer({
   showControls?: boolean;
   pageSize?: number;
 }) {
-  const categories = useMemo(
-    () => ["All", ...Array.from(new Set(allPosts.map((p) => p.category).filter(Boolean) as string[]))],
+  /**
+   * The fixed topic set, not one derived from the posts. Deriving it used to yield just
+   * "All", because every migrated post carries the single WordPress category
+   * "uncategorized" — see lib/blog-topics.ts for how posts are matched instead.
+   */
+  const categories = useMemo(() => ["All", ...BLOG_TOPICS.map((t) => t.name)], []);
+
+  /** Topic membership is per-post and never changes, so it is computed once. */
+  const topicsBySlug = useMemo(
+    () => new Map(allPosts.map((p) => [p.slug, topicsForPost(p)])),
     [allPosts],
   );
   const [active, setActive] = useState<string>("All");
@@ -145,13 +154,13 @@ export function PostsExplorer({
 
   const filtered = useMemo(() => {
     let list = allPosts.filter((p) => (featured ? p.slug !== featured.slug : true));
-    if (active !== "All") list = list.filter((p) => p.category === active);
+    if (active !== "All") list = list.filter((p) => topicsBySlug.get(p.slug)?.includes(active));
     if (query.trim()) {
       const q = query.toLowerCase();
       list = list.filter((p) => p.title.toLowerCase().includes(q) || p.excerpt.toLowerCase().includes(q));
     }
     return limit ? list.slice(0, limit) : list;
-  }, [allPosts, active, query, featured, limit]);
+  }, [allPosts, active, query, featured, limit, topicsBySlug]);
 
   const totalPages = pageSize ? Math.max(1, Math.ceil(filtered.length / pageSize)) : 1;
   const current = Math.min(page, totalPages);
@@ -191,7 +200,7 @@ export function PostsExplorer({
             <p className="mt-4 max-w-2xl text-muted">{featured.excerpt}</p>
             <span className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-navy-800 dark:text-white/80">
               Read the full article
-              <ArrowRight className="h-4 w-4 text-teal-600 transition-transform group-hover:translate-x-1 dark:text-teal-400" />
+              <ArrowUpRight className="h-4 w-4 text-teal-600 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 dark:text-teal-400" />
             </span>
           </div>
         </Link>
@@ -199,28 +208,34 @@ export function PostsExplorer({
 
       <div
         ref={listTop}
-        className={cn("mb-2 flex-col gap-5 sm:flex-row sm:items-center sm:justify-between", showControls ? "flex" : "hidden")}
+        className={cn("mb-2 flex-col gap-6 lg:flex-row lg:items-start lg:justify-between", showControls ? "flex" : "hidden")}
       >
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-          {categories.map((c) => (
-            <button
-              key={c}
-              onClick={() => {
-                setActive(c);
-                setPage(1);
-              }}
-              className={cn(
-                "border-b-2 pb-1 text-sm font-medium transition-colors",
-                active === c
-                  ? "border-teal-500 text-navy-900 dark:text-white"
-                  : "border-transparent text-muted hover:text-navy-800 dark:hover:text-white",
-              )}
-            >
-              {c}
-            </button>
-          ))}
+        <div className="min-w-0">
+          <p className="text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-teal-700 dark:text-teal-300">
+            Browse by topic
+          </p>
+          <div className="-my-1 mt-3 flex gap-2 overflow-x-auto py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {categories.map((c) => (
+              <button
+                key={c}
+                onClick={() => {
+                  setActive(c);
+                  setPage(1);
+                }}
+                aria-pressed={active === c}
+                className={cn(
+                  "shrink-0 whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500",
+                  active === c
+                    ? "bg-navy-900 text-white dark:bg-teal-500"
+                    : "bg-surface-2 text-navy-800 hover:bg-navy-100 dark:bg-white/10 dark:text-white/80 dark:hover:bg-white/20",
+                )}
+              >
+                {c}
+              </button>
+            ))}
+          </div>
         </div>
-        <div className="relative sm:w-60">
+        <div className="relative shrink-0 lg:mt-1 lg:w-64">
           <Search className="pointer-events-none absolute left-0 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
           <input
             value={query}

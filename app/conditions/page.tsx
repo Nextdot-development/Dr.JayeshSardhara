@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
 import { BreadcrumbJsonLd, JsonLd } from "@/components/seo/json-ld";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { PageHero } from "@/components/ui/page-hero";
 import { Reveal } from "@/components/ui/reveal";
@@ -52,10 +52,10 @@ export default function ConditionsPage() {
                   </p>
                   <Link
                     href={g.href}
-                    className="group mt-6 inline-flex items-center gap-2 text-sm font-medium text-navy-800 dark:text-white/80"
+                    className="group -mb-1 mt-5 inline-flex items-center gap-2 py-1 text-sm font-medium text-navy-800 dark:text-white/80"
                   >
                     Explore treatment
-                    <ArrowRight className="h-4 w-4 text-teal-600 transition-transform group-hover:translate-x-1 dark:text-teal-400" />
+                    <ArrowUpRight className="h-4 w-4 text-teal-600 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 dark:text-teal-400" />
                   </Link>
                 </div>
               </div>

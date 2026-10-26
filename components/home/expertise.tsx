@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Reveal } from "@/components/ui/reveal";
@@ -56,9 +56,9 @@ export function Expertise() {
 
                   <span className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-navy-800 dark:text-white/80">
                     Learn more
-                    <ArrowRight
+                    <ArrowUpRight
                       aria-hidden
-                      className="h-4 w-4 text-teal-600 transition-transform duration-300 group-hover:translate-x-1 group-focus-visible:translate-x-1 dark:text-teal-400"
+                      className="h-4 w-4 text-teal-600 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-focus-visible:translate-x-0.5 group-focus-visible:-translate-y-0.5 dark:text-teal-400"
                     />
                   </span>
                 </Link>

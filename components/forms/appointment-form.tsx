@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
+import { ArrowUpRight, CheckCircle2, Loader2 } from "lucide-react";
 import { ButtonAction } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { doctor } from "@/lib/data";
@@ -308,7 +308,7 @@ export function AppointmentForm({ variant = "default" }: { variant?: Variant } =
             {isSubmitting ? (
               <><Loader2 className="h-5 w-5 animate-spin" /> Sending…</>
             ) : compact ? (
-              <>Request Appointment <ArrowRight className="h-5 w-5" aria-hidden /></>
+              <>Request Appointment <ArrowUpRight className="h-5 w-5" aria-hidden /></>
             ) : (
               "Request Appointment"
             )}

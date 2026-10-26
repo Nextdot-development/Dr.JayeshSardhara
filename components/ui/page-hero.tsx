@@ -17,13 +17,13 @@ export function PageHero({
   children?: ReactNode;
 }) {
   return (
-    <section className="relative overflow-hidden border-b border-border pt-36 pb-12 sm:pt-44 lg:pb-14">
+    <section className="relative overflow-hidden border-b border-border pt-30 pb-12 sm:pt-34 lg:pb-14">
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute -right-40 -top-32 h-[28rem] w-[28rem] rounded-full bg-teal-400/[0.06] blur-3xl" />
       </div>
       <Container>
         <nav aria-label="Breadcrumb" className="mb-8 flex items-center gap-2 text-xs uppercase tracking-wider text-muted">
-          <Link href="/" className="transition-colors hover:text-teal-700">Home</Link>
+          <Link href="/" className="-my-1 inline-block py-1 transition-colors hover:text-teal-700">Home</Link>
           <span className="text-navy-300 dark:text-white/30">/</span>
           <span className="font-medium text-navy-800 dark:text-white/80">{breadcrumb ?? eyebrow}</span>
         </nav>

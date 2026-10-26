@@ -44,7 +44,7 @@ export function Awards() {
                     {a.year}
                   </span>
                   <h3 className="font-display text-lg font-medium text-navy-900 dark:text-white">{a.title}</h3>
-                  <p className="mt-1 text-sm text-muted sm:mt-0 sm:whitespace-nowrap sm:text-right">
+                  <p className="mt-1 min-w-0 text-sm text-muted sm:mt-0 sm:text-right">
                     <span className="uppercase tracking-wider text-teal-700/80 dark:text-teal-300/80">{a.type}</span>
                     <span className="mx-2 text-navy-300 dark:text-white/30">·</span>
                     {a.org}

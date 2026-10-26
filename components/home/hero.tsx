@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { ArrowRight, ArrowUpRight, Clock, Stethoscope } from "lucide-react";
+import { ArrowUpRight, Clock, Stethoscope } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import { doctor, SURGERIES_TOTAL } from "@/lib/data";
@@ -52,6 +52,15 @@ export function Hero() {
             <div className="lg:col-span-7">
              
 
+              <div className="relative mb-2 h-[19rem] w-full overflow-hidden rounded-4xl bg-gradient-to-b from-navy-50 to-teal-50 sm:h-[24rem] md:h-68 lg:hidden dark:from-navy-800 dark:to-navy-950">
+                <Image
+                  src={PORTRAIT}
+                  alt={PORTRAIT_ALT}
+                  fill
+                  sizes={PORTRAIT_SIZES}
+                  className="object-contain object-bottom"
+                />
+              </div>
               <h1
                 className="mt-6 font-display text-[2.6rem] font-medium leading-[1.02] tracking-[-0.02em] text-navy-900 xs:text-[3.1rem] sm:text-6xl lg:text-[4.7rem] dark:text-white"
               >
@@ -69,24 +78,14 @@ export function Hero() {
               <div
                 className="mt-8 flex flex-wrap items-center gap-3"
               >
-                  <Button href="#book_now" size="lg">
-                    Book An Appointment <ArrowRight className="h-4 w-4" />
+                  <Button href="/appointment" size="lg">
+                    Book An Appointment <ArrowUpRight className="h-4 w-4" />
                   </Button>
                   <Button href="#whychooseus" size="lg">
                     Why Choose Us <ArrowUpRight className="h-4 w-4" />
                   </Button>
               </div>
 
-              
-              <div className="relative mt-12 h-[19rem] w-full overflow-hidden rounded-4xl bg-gradient-to-b from-navy-50 to-teal-50 sm:h-[24rem] md:mt-8 md:h-68 lg:hidden dark:from-navy-800 dark:to-navy-950">
-                <Image
-                  src={PORTRAIT}
-                  alt={PORTRAIT_ALT}
-                  fill
-                  sizes={PORTRAIT_SIZES}
-                  className="object-contain object-bottom"
-                />
-              </div>
 
               <div
                 className="mt-10 grid max-w-xl gap-3 sm:grid-cols-2 md:mt-8 2xl:max-w-2xl"

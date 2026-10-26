@@ -43,7 +43,7 @@ export const doctor = {
   opd: "Mon – Sat · 7:30 PM – 9:00 PM",
 };
 
-export const locations = [
+export const locations: { name: string; address: string; kind: string; hours?: string }[] = [
   {
     name: "Fortis Hospital, Mulund",
     address: "Mulund Goregaon Link Road, Mulund West, Mumbai 400078",

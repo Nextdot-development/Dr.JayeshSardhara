@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowLeft, ArrowRight, ArrowUpRight, CalendarDays, Clock } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, CalendarDays, Clock } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import { CtaBand } from "@/components/ui/cta-band";
@@ -35,11 +35,11 @@ export function CmsArticle({ post, related }: { post: BlogRow; related: PostSumm
 
   return (
     <>
-      <article className="pt-32 sm:pt-40">
+      <article className="pt-30 sm:pt-34">
         <Container className="max-w-3xl">
           <Link
             href="/blog/"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-muted transition-colors hover:text-teal-700"
+            className="-my-1 inline-flex items-center gap-1.5 py-1 text-sm font-medium text-muted transition-colors hover:text-teal-700"
           >
             <ArrowLeft className="h-4 w-4" /> All articles
           </Link>
@@ -125,7 +125,7 @@ export function CmsArticle({ post, related }: { post: BlogRow; related: PostSumm
               </p>
             </div>
             <Button href="/appointment/" className="shrink-0">
-              Book an Appointment <ArrowRight className="h-4 w-4" />
+              Book an Appointment <ArrowUpRight className="h-4 w-4" />
             </Button>
           </div>
         </Container>

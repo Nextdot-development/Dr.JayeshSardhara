@@ -58,6 +58,9 @@ export const STATIC_ROUTE_SLUGS: ReadonlySet<string> = new Set([
   "brain-surgery",
   "spine-surgery",
   "news-awards",
+  "fellowship",
+  "surgeries",
+  "brain-tumor",
 ]);
 
 function readAll(): ContentDoc[] {
