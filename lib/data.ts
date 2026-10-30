@@ -447,6 +447,7 @@ export const nav = [
 export type PressItem = { outlet: string; href: string; image: string };
 
 export const pressCoverage: PressItem[] = [
+  { outlet: "CNN-News18", href: "https://x.com/CNNnews18/status/2115764947753808029", image: "/wp-content/uploads/2026/10/cnn-news18-smit-machchhar.jpg" },
   { outlet: "MedGate Today", href: "https://medgatetoday.com/mumbai-hosted-ynfcon-2026-supported-by-fortis-hospital/", image: "/wp-content/uploads/elementor/thumbs/43b2dd32-a690-4f96-a65a-67d4cd691976-rppt5zbfnlxt1p8g9zzuz08gn8rgltrfflrylmhl14.jpeg" },
   { outlet: "Dainik Bhaskar (Magzter)", href: "https://www.magzter.com/stories/newspaper/Dainik-Bhaskar-Mumbai/1776653530414", image: "/wp-content/uploads/elementor/thumbs/WhatsApp-Image-2026-06-17-at-1.24.27-PM-rp37e6is0s88zbp8udlzbeuoqixjgaf6htvu6uptag.jpeg" },
   { outlet: "Dainik Bhaskar (Magzter)", href: "https://www.magzter.com/stories/newspaper/Dainik-Bhaskar-Mumbai/1776653530414", image: "/wp-content/uploads/2026/04/WhatsApp-Image-2026-04-20-at-3.35.28-PM-915x800.jpeg" },
